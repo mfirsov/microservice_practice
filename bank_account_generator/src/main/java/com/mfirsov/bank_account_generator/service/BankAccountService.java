@@ -7,7 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 public class BankAccountService implements IBankAccountService {
 
@@ -34,8 +35,8 @@ public class BankAccountService implements IBankAccountService {
 
     @Override
     public BankAccount generateBankAccount() {
-        return new BankAccount(firstNames.get(new Random().nextInt(firstNames.size())),
-                               lastNames.get(new Random().nextInt(lastNames.size())),
-                               patronymics.get(new Random().nextInt(patronymics.size())));
+        return new BankAccount(firstNames.get(current().nextInt(firstNames.size())),
+                               lastNames.get(current().nextInt(lastNames.size())),
+                               patronymics.get(current().nextInt(patronymics.size())));
     }
 }

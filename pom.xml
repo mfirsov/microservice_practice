@@ -6,6 +6,7 @@
     <modules>
         <module>bank_account_generator</module>
 		<module>kafka_producer</module>
+		<module>kafka_consumer</module>
 	</modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
@@ -25,14 +26,6 @@
 	</properties>
 
 	<dependencies>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-data-cassandra</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-data-cassandra-reactive</artifactId>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -64,6 +57,13 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -76,8 +76,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<groupId>org.apache.maven.plugins</groupId>
 				<configuration>
-					<source>14</source>
-					<target>14</target>
+					<source>13</source>
+					<target>13</target>
 				</configuration>
 			</plugin>
 			<plugin>

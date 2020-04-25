@@ -38,7 +38,7 @@ public class KafkaProducerConfiguration {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, "bank_account");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, "kafka_producer");
         return props;
     }
 
