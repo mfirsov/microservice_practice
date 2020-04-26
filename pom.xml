@@ -7,7 +7,8 @@
         <module>bank_account_generator</module>
 		<module>kafka_producer</module>
 		<module>kafka_consumer</module>
-	</modules>
+        <module>user_cassandra_request</module>
+    </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
