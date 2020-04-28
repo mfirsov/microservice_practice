@@ -4,7 +4,7 @@ import com.mfirsov.kafka_producer.client.BankAccountGeneratorClient;
 import com.mfirsov.kafka_producer.client.BankAccountGeneratorClientImpl;
 import com.mfirsov.kafka_producer.model.BankAccount;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.IntegerSerializer;
+import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Configuration
 @EnableKafka
@@ -36,19 +37,19 @@ public class KafkaProducerConfiguration {
     public Map<String, Object> kafkaProducerProperties() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, new JsonSerializer<BankAccount>().noTypeInfo().getClass());
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "kafka_producer");
         return props;
     }
 
     @Bean
-    public ProducerFactory<Integer, BankAccount> producerFactory() {
+    public ProducerFactory<UUID, BankAccount> producerFactory() {
         return new DefaultKafkaProducerFactory<>(kafkaProducerProperties());
     }
 
     @Bean
-    public KafkaTemplate<Integer, BankAccount> bankAccountKafkaTemplate() {
+    public KafkaTemplate<UUID, BankAccount> bankAccountKafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

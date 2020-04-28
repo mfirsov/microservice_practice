@@ -2,7 +2,7 @@ package com.mfirsov.kafkaconsumer.configuration;
 
 import com.mfirsov.kafkaconsumer.model.BankAccount;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.IntegerDeserializer;
+import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.apache.kafka.connect.json.JsonDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @EnableKafka
 @Configuration
@@ -26,7 +27,7 @@ public class KafkaConsumerConfiguration {
     public Map<String, Object> kafkaConsumerProperties() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UUIDDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, "kafka_consumer");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "banking");
@@ -34,14 +35,14 @@ public class KafkaConsumerConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<Integer, BankAccount> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(kafkaConsumerProperties(), new IntegerDeserializer(),
+    public ConsumerFactory<UUID, BankAccount> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(kafkaConsumerProperties(), new UUIDDeserializer(),
                 new org.springframework.kafka.support.serializer.JsonDeserializer<>(BankAccount.class, false));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<Integer, BankAccount> kafkaListenerContainerFactory(ConsumerFactory<Integer, BankAccount> consumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<Integer, BankAccount> kafkaListenerContainerFactory =
+    public ConcurrentKafkaListenerContainerFactory<UUID, BankAccount> kafkaListenerContainerFactory(ConsumerFactory<UUID, BankAccount> consumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<UUID, BankAccount> kafkaListenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         kafkaListenerContainerFactory.setConsumerFactory(consumerFactory);
         return kafkaListenerContainerFactory;

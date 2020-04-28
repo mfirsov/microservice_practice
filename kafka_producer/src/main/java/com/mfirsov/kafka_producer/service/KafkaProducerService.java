@@ -3,6 +3,7 @@ package com.mfirsov.kafka_producer.service;
 import com.mfirsov.kafka_producer.client.BankAccountGeneratorClient;
 import com.mfirsov.kafka_producer.model.BankAccount;
 import lombok.extern.log4j.Log4j2;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,6 +13,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -22,7 +24,7 @@ public class KafkaProducerService {
     private String topic;
 
     @Autowired
-    private KafkaTemplate<Integer, BankAccount> bankAccountKafkaTemplate;
+    private KafkaTemplate<UUID, BankAccount> bankAccountKafkaTemplate;
 
     private final BankAccountGeneratorClient bankAccountGeneratorClient;
 
@@ -31,15 +33,12 @@ public class KafkaProducerService {
         this.bankAccountGeneratorClient = bankAccountGeneratorClient;
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1000)
     public void produceToKafka() {
         BankAccount bankAccount = bankAccountGeneratorClient.getBankAccount();
         setRandomAccountType(bankAccount);
         if (bankAccount.getFirstName().length() >= 5) {
-            Message<BankAccount> bankAccountMessage = MessageBuilder.withPayload(bankAccount)
-                    .setHeader(KafkaHeaders.TOPIC, topic)
-                    .build();
-            bankAccountKafkaTemplate.send(bankAccountMessage);
+            bankAccountKafkaTemplate.send(topic, bankAccount.getUuid(), bankAccount);
             log.info("Following message was sent to Kafka: " + bankAccount);
         } else {
             log.info("Following message was filtered: " + bankAccount);

@@ -8,6 +8,7 @@
 		<module>kafka_producer</module>
 		<module>kafka_consumer</module>
         <module>user_cassandra_request</module>
+        <module>address_generate</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
@@ -22,7 +23,7 @@
 	<description>Practice project in microservice architecture</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>13</java.version>
 		<revision>2.2.6.RELEASE</revision>
 	</properties>
 
