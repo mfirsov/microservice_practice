@@ -13,6 +13,7 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.ValueJoiner;
+import org.apache.kafka.streams.kstream.internals.KStreamTransformValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -99,9 +100,10 @@ public class KafkaConsumerStreamingConfiguration {
         KTable<UUID, BankAccount> uuidBankAccountKTable = streamsBuilderFactoryBean.table(bankAccountTopic, Consumed.with(Serdes.UUID(), new JsonSerde<>(BankAccount.class, new ObjectMapper())));
         KTable<UUID, Address> uuidAddressKTable = streamsBuilderFactoryBean.table(addressTopic, Consumed.with(Serdes.UUID(), new JsonSerde<>(Address.class, new ObjectMapper())));
         KTable<UUID, BankAccountInfo> uuidBankAccountInfoKTable = uuidBankAccountKTable.join(uuidAddressKTable, valueJoiner());
-        uuidBankAccountInfoKTable.toStream().foreach((key, value) -> bankAccountInfoRepository.insert(value));
-        uuidBankAccountInfoKTable.toStream().to(bankAccountInfoTopic);
-        return uuidBankAccountInfoKTable.toStream();
+        KStream<UUID, BankAccountInfo> uuidBankAccountInfoKStream = uuidBankAccountInfoKTable.toStream();
+        uuidBankAccountInfoKStream.foreach((key, value) -> bankAccountInfoRepository.insert(value));
+        uuidBankAccountInfoKStream.to(bankAccountInfoTopic);
+        return uuidBankAccountInfoKStream;
     }
 
 }
