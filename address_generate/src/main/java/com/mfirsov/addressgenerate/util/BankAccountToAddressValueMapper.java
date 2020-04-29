@@ -1,8 +1,8 @@
 package com.mfirsov.addressgenerate.util;
 
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
-import com.mfirsov.addressgenerate.model.Address;
-import com.mfirsov.addressgenerate.model.BankAccount;
+import com.mfirsov.model.Address;
+import com.mfirsov.model.BankAccount;
 import org.apache.kafka.streams.kstream.ValueMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

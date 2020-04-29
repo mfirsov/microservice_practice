@@ -1,7 +1,7 @@
 package com.mfirsov.kafka_producer.client;
 
-import com.mfirsov.kafka_producer.model.BankAccount;
-import com.mfirsov.kafka_producer.util.JsonBodyHandler;
+import com.mfirsov.model.BankAccount;
+import com.mfirsov.util.JsonBodyHandler;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;

@@ -1,13 +1,11 @@
 package com.mfirsov.addressgenerate.configuration;
 
-import com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer;
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
 import com.mfirsov.addressgenerate.client.AddressGeneratorClientImpl;
-import com.mfirsov.addressgenerate.model.Address;
-import com.mfirsov.addressgenerate.model.BankAccount;
+import com.mfirsov.model.BankAccount;
 import com.mfirsov.addressgenerate.util.BankAccountToAddressValueMapper;
+import com.mfirsov.model.Address;
 import lombok.extern.log4j.Log4j2;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -22,13 +20,11 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
-import org.springframework.kafka.support.KafkaStreamBrancher;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 @Configuration
@@ -75,8 +71,7 @@ public class KafkaStreamingConfiguration {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);
         props.put(StreamsConfig.NUM_STREAM_THREADS_CONFIG, 1);
         props.put(StreamsConfig.CLIENT_ID_CONFIG, clientId);
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, BankAccount.class);
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return new KafkaStreamsConfiguration(props);
     }
 

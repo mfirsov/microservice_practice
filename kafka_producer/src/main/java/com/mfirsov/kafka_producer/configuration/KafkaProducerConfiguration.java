@@ -2,7 +2,7 @@ package com.mfirsov.kafka_producer.configuration;
 
 import com.mfirsov.kafka_producer.client.BankAccountGeneratorClient;
 import com.mfirsov.kafka_producer.client.BankAccountGeneratorClientImpl;
-import com.mfirsov.kafka_producer.model.BankAccount;
+import com.mfirsov.model.BankAccount;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class KafkaProducerConfiguration {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, new JsonSerializer<BankAccount>().noTypeInfo().getClass());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "kafka_producer");
         return props;
     }

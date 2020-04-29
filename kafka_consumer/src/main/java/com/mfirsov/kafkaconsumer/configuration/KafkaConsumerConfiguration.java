@@ -1,6 +1,6 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
-import com.mfirsov.kafkaconsumer.model.BankAccount;
+import com.mfirsov.model.BankAccount;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.UUIDDeserializer;
 import org.apache.kafka.connect.json.JsonDeserializer;

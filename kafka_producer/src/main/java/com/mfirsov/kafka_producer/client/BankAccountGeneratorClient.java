@@ -1,8 +1,6 @@
 package com.mfirsov.kafka_producer.client;
 
-import com.mfirsov.kafka_producer.model.BankAccount;
-
-import java.io.IOException;
+import com.mfirsov.model.BankAccount;
 
 public interface BankAccountGeneratorClient {
     BankAccount getBankAccount();

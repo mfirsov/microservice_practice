@@ -1,6 +1,6 @@
 package com.mfirsov.usercassandrarequest.controller;
 
-import com.mfirsov.usercassandrarequest.model.BankAccount;
+import com.mfirsov.model.BankAccount;
 import com.mfirsov.usercassandrarequest.repository.CustomCassandraRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

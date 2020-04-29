@@ -1,6 +1,6 @@
 package com.mfirsov.usercassandrarequest.repository;
 
-import com.mfirsov.usercassandrarequest.model.BankAccount;
+import com.mfirsov.model.BankAccount;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 

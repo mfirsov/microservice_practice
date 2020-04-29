@@ -9,6 +9,7 @@
 		<module>kafka_consumer</module>
         <module>user_cassandra_request</module>
         <module>address_generate</module>
+        <module>common</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

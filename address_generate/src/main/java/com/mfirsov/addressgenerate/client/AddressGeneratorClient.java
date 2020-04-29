@@ -1,6 +1,6 @@
 package com.mfirsov.addressgenerate.client;
 
-import com.mfirsov.addressgenerate.model.Address;
+import com.mfirsov.model.Address;
 import org.springframework.stereotype.Component;
 
 @Component

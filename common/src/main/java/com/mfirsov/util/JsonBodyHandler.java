@@ -1,4 +1,4 @@
-package com.mfirsov.kafka_producer.util;
+package com.mfirsov.util;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

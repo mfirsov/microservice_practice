@@ -1,9 +1,8 @@
 package com.mfirsov.addressgenerate.client;
 
-import com.mfirsov.addressgenerate.model.Address;
 import com.mfirsov.addressgenerate.model.ResponseBody;
-import com.mfirsov.addressgenerate.util.JsonBodyHandler;
-import lombok.SneakyThrows;
+import com.mfirsov.model.Address;
+import com.mfirsov.util.JsonBodyHandler;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.util.Arrays;
 
 @Log4j2
 public class AddressGeneratorClientImpl implements AddressGeneratorClient {
