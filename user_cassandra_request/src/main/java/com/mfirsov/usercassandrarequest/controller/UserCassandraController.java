@@ -1,6 +1,9 @@
 package com.mfirsov.usercassandrarequest.controller;
 
+import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
+import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.model.BankAccountInfoResponse;
 import com.mfirsov.usercassandrarequest.repository.CustomCassandraRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +22,15 @@ public class UserCassandraController {
     @Autowired
     private CustomCassandraRepository customCassandraRepository;
 
-    @GetMapping(value = "/bankaccount/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<BankAccount> getBankAccountFromCassandra(@PathVariable UUID uuid) {
-        BankAccount bankAccount = customCassandraRepository.findBankAccountByUuid(uuid).orElse(null);
-        if (bankAccount != null) {
-            log.info("Following BankAccount was requested " + bankAccount);
-            return ResponseEntity.ok(bankAccount);
+    @GetMapping(value = "/bankaccountinfo/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<BankAccountInfoResponse> getBankAccountFromCassandra(@PathVariable UUID uuid) {
+        BankAccountInfo bankAccountInfo = customCassandraRepository.findBankAccountInfoByUuid(uuid).orElse(null);
+        if (bankAccountInfo != null) {
+            log.info("Following BankAccount was requested " + bankAccountInfo);
+            return ResponseEntity.ok(new BankAccountInfoResponse(bankAccountInfo));
         } else {
             log.error("Bank account with requested UUID=" + uuid + " was not found");
-            return ResponseEntity.ok(new BankAccount());
+            return ResponseEntity.ok(new BankAccountInfoResponse(new BankAccountInfo(uuid, new BankAccount(), new Address())));
         }
     }
 
