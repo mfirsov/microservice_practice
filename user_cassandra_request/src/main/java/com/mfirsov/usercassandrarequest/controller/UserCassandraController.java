@@ -4,7 +4,7 @@ import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.model.BankAccountInfoResponse;
-import com.mfirsov.usercassandrarequest.repository.CustomCassandraRepository;
+import com.mfirsov.repository.CustomCassandraRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

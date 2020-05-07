@@ -1,6 +1,7 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
@@ -9,6 +10,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 
 @Configuration
 @EnableCassandraRepositories
+@ComponentScan(basePackages = {"com.mfirsov.repository", "com.mfirsov.kafkaconsumer"})
 public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Value("${spring.data.cassandra.keyspace-name}")

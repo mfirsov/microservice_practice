@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.kafkaconsumer.repository.BankAccountInfoRepository;
 import com.mfirsov.kafkaconsumer.util.BankAccountAndAddressValueJoiner;
+import com.mfirsov.repository.CustomCassandraRepository;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -13,7 +13,6 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.ValueJoiner;
-import org.apache.kafka.streams.kstream.internals.KStreamTransformValues;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -57,7 +56,7 @@ public class KafkaConsumerStreamingConfiguration {
     private String bankAccountInfoTopic;
 
     @Autowired
-    private BankAccountInfoRepository bankAccountInfoRepository;
+    private CustomCassandraRepository customCassandraRepository;
 
     @Bean
     public ValueJoiner<BankAccount, Address, BankAccountInfo> valueJoiner() {
@@ -101,7 +100,7 @@ public class KafkaConsumerStreamingConfiguration {
         KTable<UUID, Address> uuidAddressKTable = streamsBuilderFactoryBean.table(addressTopic, Consumed.with(Serdes.UUID(), new JsonSerde<>(Address.class, new ObjectMapper())));
         KTable<UUID, BankAccountInfo> uuidBankAccountInfoKTable = uuidBankAccountKTable.join(uuidAddressKTable, valueJoiner());
         KStream<UUID, BankAccountInfo> uuidBankAccountInfoKStream = uuidBankAccountInfoKTable.toStream();
-        uuidBankAccountInfoKStream.foreach((key, value) -> bankAccountInfoRepository.insert(value));
+        uuidBankAccountInfoKStream.foreach((key, value) -> customCassandraRepository.insert(value));
         uuidBankAccountInfoKStream.to(bankAccountInfoTopic);
         return uuidBankAccountInfoKStream;
     }
