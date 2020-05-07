@@ -13,6 +13,7 @@
         <module>gRpc_service</module>
 		<module>gRpc_client_service</module>
         <module>RSocker_server</module>
+        <module>RSocket_client</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>
