@@ -29,4 +29,8 @@ public class BankAccountInfo {
     @CassandraType(type = DataType.Name.UDT, userTypeName = "address")
     private Address address;
 
+    public BankAccountInfo(BankAccount bankAccount, Address address) {
+        this.bankAccount = bankAccount;
+        this.address = address;
+    }
 }

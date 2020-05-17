@@ -84,7 +84,7 @@ public class KafkaStreamingConfiguration {
     public KStream<UUID, BankAccount> kStream(StreamsBuilder streamsBuilderFactoryBean) {
         KTable<UUID, BankAccount> kTable = streamsBuilderFactoryBean.table(inputTopic);
         kTable.toStream().filter((k,v) -> v.getLastName().startsWith("А"))
-                .mapValues(valueMapper()::apply)
+                .mapValues(valueMapper())
                 .to(addressTopic);
         return kTable.toStream();
     }

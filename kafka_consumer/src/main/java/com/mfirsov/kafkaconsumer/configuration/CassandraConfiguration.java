@@ -9,8 +9,8 @@ import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 @Configuration
-@EnableCassandraRepositories
-@ComponentScan(basePackages = {"com.mfirsov.repository", "com.mfirsov.kafkaconsumer"})
+@EnableCassandraRepositories(basePackages = {"com.mfirsov.repository"})
+@ComponentScan(basePackages = {"com.mfirsov.repository"})
 public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Value("${spring.data.cassandra.keyspace-name}")
@@ -35,6 +35,6 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Override
     public String[] getEntityBasePackages() {
-        return new String[] {"com.mfirsov.kafkaconsumer"};
+        return new String[] {"com.mfirsov.repository"};
     }
 }

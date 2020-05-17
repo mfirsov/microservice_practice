@@ -1,10 +1,10 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mfirsov.kafkaconsumer.util.BankAccountAndAddressValueJoiner;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.kafkaconsumer.util.BankAccountAndAddressValueJoiner;
 import com.mfirsov.repository.CustomCassandraRepository;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;

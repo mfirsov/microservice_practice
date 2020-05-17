@@ -19,7 +19,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @GrpcService
-@ComponentScan(basePackageClasses = {CustomCassandraRepository.class})
 public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccountInfoServiceImplBase {
 
     @Autowired
@@ -27,8 +26,7 @@ public class BankAccountInfoService extends BankAccountInfoServiceGrpc.BankAccou
 
     @Override
     public void getBankAccountInfo(BankAccountInfoRequest request, StreamObserver<BankAccountInfoResponse> responseObserver) {
-        List<BankAccountInfo> bankAccountInfos = customCassandraRepository
-                .findAll();
+        List<BankAccountInfo> bankAccountInfos = customCassandraRepository.findAll();
 
         BankAccountInfoResponse bankAccountInfoResponse = BankAccountInfoResponse.newBuilder()
                 .addAllBankAccountInfo(bankAccountInfos.stream()

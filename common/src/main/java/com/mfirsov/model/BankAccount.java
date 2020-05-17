@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Data
 @NoArgsConstructor
@@ -30,5 +31,14 @@ public class BankAccount {
 
     public enum AccountType {
         DEBIT,CREDIT;
+    }
+
+    public BankAccount(String firstName, String lastName, String patronymic, AccountType accountType) {
+        this.uuid = UUID.randomUUID();
+        this.accountNumber = ThreadLocalRandom.current().nextLong();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.patronymic = patronymic;
+        this.accountType = accountType;
     }
 }
