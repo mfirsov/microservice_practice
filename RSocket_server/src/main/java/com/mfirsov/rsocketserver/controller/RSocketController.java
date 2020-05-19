@@ -15,10 +15,6 @@ import java.util.UUID;
 @Log4j2
 public class RSocketController {
 
-    private static final String SERVER = "Server";
-    private static final String RESPONSE = "Response";
-    private static final String STREAM = "Stream";
-
     @Autowired
     private BankAccountInfoService bankAccountInfoService;
 

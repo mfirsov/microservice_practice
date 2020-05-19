@@ -2,9 +2,9 @@ package com.mfirsov.addressgenerate.configuration;
 
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
 import com.mfirsov.addressgenerate.client.AddressGeneratorClientImpl;
-import com.mfirsov.model.BankAccount;
 import com.mfirsov.addressgenerate.util.BankAccountToAddressValueMapper;
 import com.mfirsov.model.Address;
+import com.mfirsov.model.BankAccount;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;

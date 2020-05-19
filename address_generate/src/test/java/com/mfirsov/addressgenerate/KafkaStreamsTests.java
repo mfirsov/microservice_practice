@@ -91,7 +91,7 @@ public class KafkaStreamsTests {
         bankAccountProducer.flush();
         Address address = new Address("TestStreet", "TestCity", "TestState");
         Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(address);
-        ConsumerRecord<UUID, Address> consumerRecord = records.poll(5000, TimeUnit.MILLISECONDS);
+        ConsumerRecord<UUID, Address> consumerRecord = records.poll(10000, TimeUnit.MILLISECONDS);
         Assertions.assertNotNull(consumerRecord);
         Assertions.assertEquals(address, consumerRecord.value());
     }
@@ -104,7 +104,7 @@ public class KafkaStreamsTests {
         bankAccountProducer.flush();
         Address address = new Address("TestStreet", "TestCity", "TestState");
         Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(address);
-        ConsumerRecord<UUID, Address> consumerRecord = records.poll(5000, TimeUnit.MILLISECONDS);
+        ConsumerRecord<UUID, Address> consumerRecord = records.poll(10000, TimeUnit.MILLISECONDS);
         Assertions.assertNull(consumerRecord);
     }
 

@@ -73,18 +73,19 @@ public class BankAccountService implements IBankAccountService {
     private BankAccount generateBankAccount(Sex sex) {
         BankAccount bankAccount = new BankAccount();
         if (Sex.FEMALE.equals(sex)) {
-            bankAccount.setFirstName(womanFirstNames.get(current().nextInt(manFirstNames.size())));
-            bankAccount.setLastName(womanLastNames.get(current().nextInt(womanLastNames.size())));
-            bankAccount.setPatronymic(womanPatronymics.get(current().nextInt(womanPatronymics.size())));
+            setBankAccountFields(bankAccount, womanFirstNames, womanLastNames, womanPatronymics);
         }
         if (Sex.MALE.equals(sex)) {
-
-            bankAccount.setFirstName(manFirstNames.get(current().nextInt(manFirstNames.size())));
-            bankAccount.setLastName(manLastNames.get(current().nextInt(manLastNames.size())));
-            bankAccount.setPatronymic(manPatronymics.get(current().nextInt(manPatronymics.size())));
+            setBankAccountFields(bankAccount, manFirstNames, manLastNames, manPatronymics);
         }
 
         return bankAccount;
+    }
+
+    private void setBankAccountFields(BankAccount bankAccount, List<String> manFirstNames, List<String> manLastNames, List<String> manPatronymics) {
+        bankAccount.setFirstName(manFirstNames.isEmpty() ? null : manFirstNames.get(current().nextInt(manFirstNames.size())));
+        bankAccount.setLastName(manLastNames.isEmpty() ? null : manLastNames.get(current().nextInt(manLastNames.size())));
+        bankAccount.setPatronymic(manPatronymics.isEmpty() ? null : manPatronymics.get(current().nextInt(manPatronymics.size())));
     }
 
     @Override
@@ -98,6 +99,6 @@ public class BankAccountService implements IBankAccountService {
     }
 
     private enum Sex {
-        MALE,FEMALE
+        MALE, FEMALE
     }
 }

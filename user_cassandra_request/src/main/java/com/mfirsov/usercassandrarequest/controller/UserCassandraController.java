@@ -1,7 +1,5 @@
 package com.mfirsov.usercassandrarequest.controller;
 
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.model.BankAccountInfoResponse;
 import com.mfirsov.repository.CustomCassandraRepository;

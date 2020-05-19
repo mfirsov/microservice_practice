@@ -1,6 +1,5 @@
 package com.mfirsov.usercassandrarequest;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
@@ -8,13 +7,13 @@ import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.model.BankAccountInfoResponse;
 import com.mfirsov.repository.CustomCassandraRepository;
 import com.mfirsov.usercassandrarequest.controller.UserCassandraController;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -31,7 +29,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(classes = {UserCassandraController.class})
 @WebMvcTest
 @AutoConfigureMockMvc
