@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.mfirsov.grpcservice.service";
+
+package GRPC;
+
+service BankAccountInfoService {
+    rpc GetBankAccountInfo (BankAccountInfoRequest) returns (BankAccountInfoResponse);
+}
+
+message BankAccountInfoResponse {
+    repeated BankAccountInfo bankAccountInfo = 1;
+}
+
+message BankAccountInfo {
+    BankAccount bankAccount = 1;
+    Address address = 2;
+}
+
+message Address {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+}
+
+message BankAccount {
+    string uuid = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string patronymic = 4;
+    uint64 accountNumber = 5;
+
+    enum AccountType {
+        DEBIT = 0;
+        CREDIT = 1;
+    }
+
+    AccountType accountType = 6;
+}
+
+message BankAccountInfoRequest {
+    string accountType = 1;
+}
+
