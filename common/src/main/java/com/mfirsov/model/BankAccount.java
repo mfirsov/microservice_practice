@@ -1,6 +1,5 @@
 package com.mfirsov.model;
 
-import com.datastax.driver.core.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,21 +15,21 @@ import java.util.concurrent.ThreadLocalRandom;
 @UserDefinedType("bank_account")
 public class BankAccount {
 
-    @CassandraType(type = DataType.Name.UUID)
+    @CassandraType(type = CassandraType.Name.UUID)
     private UUID uuid;
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String firstName;
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String lastName;
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String patronymic;
-    @CassandraType(type = DataType.Name.DECIMAL)
+    @CassandraType(type = CassandraType.Name.DECIMAL)
     private long accountNumber;
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private AccountType accountType;
 
     public enum AccountType {
-        DEBIT,CREDIT;
+        DEBIT,CREDIT
     }
 
     public BankAccount(String firstName, String lastName, String patronymic, AccountType accountType) {

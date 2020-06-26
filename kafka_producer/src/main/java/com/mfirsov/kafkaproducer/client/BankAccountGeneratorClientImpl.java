@@ -1,13 +1,14 @@
 package com.mfirsov.kafkaproducer.client;
 
 import com.mfirsov.model.BankAccount;
-import com.mfirsov.util.JsonBodyHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 
 public class BankAccountGeneratorClientImpl implements BankAccountGeneratorClient {
 
@@ -18,21 +19,14 @@ public class BankAccountGeneratorClientImpl implements BankAccountGeneratorClien
     }
 
     @Override
-    public BankAccount getBankAccount() {
-        HttpClient httpClient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .build();
-        HttpRequest request = HttpRequest.newBuilder(URI.create(bankAccountGeneratorAddress + "/getBankAccount"))
-                .GET()
-                .setHeader("User-Agent", "Java 11 HttpClient")
-                .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                .build();
-        try {
-            return httpClient.send(request, new JsonBodyHandler<>(BankAccount.class)).body();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return new BankAccount();
-        }
+    public Mono<BankAccount> getBankAccount() {
+        WebClient webClient = WebClient.create(bankAccountGeneratorAddress);
+        return webClient
+                .get()
+                .uri("/api/v1/bank_account")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(BankAccount.class);
     }
 
 }

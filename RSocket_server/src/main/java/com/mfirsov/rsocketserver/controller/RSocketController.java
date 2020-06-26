@@ -15,8 +15,11 @@ import java.util.UUID;
 @Log4j2
 public class RSocketController {
 
-    @Autowired
-    private BankAccountInfoService bankAccountInfoService;
+    private final BankAccountInfoService bankAccountInfoService;
+
+    public RSocketController(BankAccountInfoService bankAccountInfoService) {
+        this.bankAccountInfoService = bankAccountInfoService;
+    }
 
     @MessageMapping("getBankAccountInfoByUUID")
     Mono<BankAccountInfo> getBankAccountInfoByUUID(UUID uuid) {

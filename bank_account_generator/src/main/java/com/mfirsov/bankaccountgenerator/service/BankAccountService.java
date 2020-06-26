@@ -4,6 +4,7 @@ import com.mfirsov.bankaccountgenerator.model.BankAccount;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,21 +34,24 @@ public class BankAccountService implements IBankAccountService {
     @Value("${woman.patronymics.path:bank_account_generator/src/main/resources/WomansPatronymics.txt}")
     private String womanPatronymicsPath;
 
-    private final List<String> manFirstNames = new ArrayList<>();
-    private final List<String> manLastNames = new ArrayList<>();
-    private final List<String> manPatronymics = new ArrayList<>();
-    private final List<String> womanFirstNames = new ArrayList<>();
-    private final List<String> womanLastNames = new ArrayList<>();
-    private final List<String> womanPatronymics = new ArrayList<>();
+    private List<String> manFirstNames = new ArrayList<>();
+    private List<String> manLastNames = new ArrayList<>();
+    private List<String> manPatronymics = new ArrayList<>();
+    private List<String> womanFirstNames = new ArrayList<>();
+    private List<String> womanLastNames = new ArrayList<>();
+    private List<String> womanPatronymics = new ArrayList<>();
 
     public BankAccountService() {
+    }
+
+    @PostConstruct
+    public void init() {
         manFirstNames.addAll(getAllStrings(Path.of(manFirstNamesPath)));
         manLastNames.addAll(getAllStrings(Path.of(manLastNamesPath)));
         manPatronymics.addAll(getAllStrings(Path.of(manPatronymicsPath)));
         womanFirstNames.addAll(getAllStrings(Path.of(womanFirstNamesPath)));
         womanLastNames.addAll(getAllStrings(Path.of(womanLastNamesPath)));
         womanPatronymics.addAll(getAllStrings(Path.of(womanPatronymicsPath)));
-
     }
 
     public BankAccountService(String manFirstNamePath, String manLastNamePath, String manPatronymicsPath,

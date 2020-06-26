@@ -1,9 +1,10 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
+//option java_multiple_files = true;
 option java_package = "com.mfirsov.grpcservice.service";
+option java_outer_classname = "BankAccountInfoProto";
 
-package GRPC;
+package com.mfirsov.grpcservice.service;
 
 service BankAccountInfoService {
     rpc GetBankAccountInfo (BankAccountInfoRequest) returns (BankAccountInfoResponse);

@@ -9,56 +9,61 @@ import org.junit.platform.commons.util.StringUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class})
+@WebFluxTest(controllers = BankAccountController.class)
 class BankAccountControllerTest {
 
-    @InjectMocks
-    BankAccountController bankAccountController;
-
-    @Mock
+    @MockBean
     IBankAccountService bankAccountService;
+
+    @Autowired
+    private WebTestClient webClient;
 
     @Test
     @DisplayName("Basic BankAccountController unit test")
     void getBankAccount() {
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         lenient().when(bankAccountService.generateManBankAccount()).thenReturn(new BankAccount("TestFirstName", "TestLastName", "TestPatronymic"));
         lenient().when(bankAccountService.generateWomanBankAccount()).thenReturn(new BankAccount("TestFirstName1", "TestLastName1", "TestPatronymic1"));
 
-        BankAccount bankAccount = bankAccountController.getBankAccount();
-        assertNotNull(bankAccount);
-        assertTrue(bankAccount.getAccountNumber() > 0, "AccountNumber is 0 or null");
-        assertTrue(StringUtils.isNotBlank(bankAccount.getFirstName()));
-        assertTrue(StringUtils.isNotBlank(bankAccount.getLastName()));
-        assertTrue(StringUtils.isNotBlank(bankAccount.getPatronymic()));
-        assertNotNull(bankAccount.getUuid(), "UUID is null");
+
+        webClient.get()
+                .uri("/api/v1/bank_account")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BankAccount.class);
     }
 
     @Test
     @DisplayName("Trying to get BankAccount through BankAccountController with empty FNP")
     void getBankAccountWithEmptyStrings() {
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         lenient().when(bankAccountService.generateManBankAccount()).thenReturn(new BankAccount());
         lenient().when(bankAccountService.generateWomanBankAccount()).thenReturn(new BankAccount());
 
-        BankAccount bankAccount = bankAccountController.getBankAccount();
-        assertNotNull(bankAccount);
-        assertNull(bankAccount.getFirstName());
-        assertNull(bankAccount.getLastName());
-        assertNull(bankAccount.getPatronymic());
-        assertNotNull(bankAccount.getUuid());
-        assertTrue(bankAccount.getAccountNumber() > 0);
+        webClient.get()
+                .uri("/api/v1/bank_account")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BankAccount.class);
     }
 
 }

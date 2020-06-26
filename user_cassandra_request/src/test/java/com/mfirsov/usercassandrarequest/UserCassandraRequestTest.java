@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class UserCassandraRequestTest {
         BankAccount bankAccountStub = new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
         Address addressStub = new Address("TestStreet", "TestCity", "TestState");
         BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountStub, addressStub);
-        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(java.util.Optional.of(bankAccountInfo));
+        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.just(bankAccountInfo));
 
         MvcResult mvcResult = mockMvc
                 .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", bankAccountStub.getUuid().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
@@ -60,7 +61,7 @@ public class UserCassandraRequestTest {
     @Test
     @DisplayName("Verify /bankaccountinfo/{uuid} with correct but doesnt exist UUID will return empty BankAccountInfo")
     void uuidDoesntExist() throws Exception {
-        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.empty());
         MvcResult mvcResult = mockMvc
                 .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
@@ -79,7 +80,7 @@ public class UserCassandraRequestTest {
         BankAccount bankAccountStub = new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
         Address addressStub = new Address("TestStreet", "TestCity", "TestState");
         BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountStub, addressStub);
-        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Optional.of(bankAccountInfo));
+        Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.just(bankAccountInfo));
         MvcResult mvcResult = mockMvc
                 .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", "dfgdfg").accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();

@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,17 +16,20 @@ import java.util.concurrent.ThreadLocalRandom;
 @Log4j2
 public class BankAccountController {
 
-    @Autowired
-    private IBankAccountService bankAccountService;
+    private final IBankAccountService bankAccountService;
 
-    @GetMapping(path = "/getBankAccount",
+    public BankAccountController(IBankAccountService bankAccountService) {
+        this.bankAccountService = bankAccountService;
+    }
+
+    @GetMapping(path = "/api/v1/bank_account",
                 produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody BankAccount getBankAccount() {
+    Mono<BankAccount> getBankAccount() {
         //true = getManBankAccountService, false = getWomanBankAccountService
         BankAccount bankAccount = ThreadLocalRandom.current().nextBoolean() ?
                 bankAccountService.generateManBankAccount() : bankAccountService.generateWomanBankAccount();
-        log.info("Following message was requested " + bankAccount);
-        return bankAccount;
+//        log.info("Following message was requested " + bankAccount);
+        return Mono.just(bankAccount).doOnSuccess(bankAccount1 -> log.info("Following message was requested " + bankAccount1));
     }
 
 }

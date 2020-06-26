@@ -1,20 +1,22 @@
 package com.mfirsov.grpcclientservice.client;
 
-import com.mfirsov.grpcclientservice.service.BankAccountInfoRequest;
-import com.mfirsov.grpcclientservice.service.BankAccountInfoResponse;
-import com.mfirsov.grpcclientservice.service.BankAccountInfoServiceGrpc;
-import com.mfirsov.grpcclientservice.service.LogGrpcClientInterceptor;
-import net.devh.boot.grpc.client.inject.GrpcClient;
+import com.mfirsov.grpcservice.service.BankAccountInfoProto;
+import com.mfirsov.grpcservice.service.ReactorBankAccountInfoServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GRpcClient {
 
-    @GrpcClient(value = "grpc-client-service", interceptors = {LogGrpcClientInterceptor.class})
-    private BankAccountInfoServiceGrpc.BankAccountInfoServiceBlockingStub bankAccountInfoServiceStub;
+    private static final int PORT = 9999;
 
-    public BankAccountInfoResponse getBankAccountInfo(String accountType) {
-        BankAccountInfoRequest request = BankAccountInfoRequest.newBuilder().setAccountType(accountType).build();
+    private final ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", PORT).usePlaintext().build();
+    private final ReactorBankAccountInfoServiceGrpc.ReactorBankAccountInfoServiceStub bankAccountInfoServiceStub = ReactorBankAccountInfoServiceGrpc.newReactorStub(channel);
+
+    public Mono<BankAccountInfoProto.BankAccountInfoResponse> getBankAccountInfo(String accountType) {
+        BankAccountInfoProto.BankAccountInfoRequest request = BankAccountInfoProto.BankAccountInfoRequest.newBuilder().setAccountType(accountType).build();
         return bankAccountInfoServiceStub.getBankAccountInfo(request);
     }
 

@@ -13,9 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
@@ -26,6 +28,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Mono;
+import reactor.kafka.sender.SenderOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +66,7 @@ public class KafkaProducerTest {
     BlockingQueue<ConsumerRecord<UUID, BankAccount>> records;
     KafkaMessageListenerContainer<UUID, BankAccount> container;
     Map<String, Object> props = new HashMap<>();
-    KafkaTemplate<UUID, BankAccount> kafkaTemplate;
+    ReactiveKafkaProducerTemplate<UUID, BankAccount> kafkaTemplate;
     private BankAccount bankAccount;
 
     @BeforeAll
@@ -81,7 +85,7 @@ public class KafkaProducerTest {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, UUIDSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "kafka_producer");
-        kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(props));
+        kafkaTemplate = new ReactiveKafkaProducerTemplate<>(SenderOptions.create(props));
     }
 
     @BeforeEach
@@ -96,11 +100,11 @@ public class KafkaProducerTest {
 
     @Test
     public void kafkaSetup_withTopic_ensureSendMessageIsReceived() throws Exception {
-        Mockito.when(bankAccountGeneratorClient.getBankAccount()).thenReturn(bankAccount);
+        Mockito.when(bankAccountGeneratorClient.getBankAccount()).thenReturn(Mono.just(bankAccount));
         kafkaProducerService = new KafkaProducerService(kafkaTemplate, bankAccountGeneratorClient);
         kafkaProducerService.setTopic(TOPIC);
         kafkaProducerService.produceToKafka();
-        ConsumerRecord<UUID, BankAccount> singleRecord = records.poll(100, TimeUnit.MILLISECONDS);
+        ConsumerRecord<UUID, BankAccount> singleRecord = records.poll(1000, TimeUnit.MILLISECONDS);
         assertNotNull(singleRecord);
         assertEquals(singleRecord.key(), bankAccount.getUuid());
         assertEquals(singleRecord.value(), bankAccount);

@@ -1,8 +1,7 @@
 package com.mfirsov.grpcservice.controller;
 
-import com.mfirsov.grpcservice.service.BankAccount;
-import com.mfirsov.grpcservice.service.BankAccountInfoRequest;
-import com.mfirsov.grpcservice.service.BankAccountInfoResponse;
+import com.mfirsov.grpcservice.service.BankAccountInfoProto;
+import com.mfirsov.grpcservice.service.BankAccountInfoService;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.repository.CustomCassandraRepository;
@@ -13,21 +12,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.cassandra.ReactiveSession;
-import org.springframework.data.cassandra.SessionFactory;
-import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
@@ -42,7 +36,7 @@ class BankAccountInfoServiceTest {
 
     @Test
     @DisplayName("Only 1 BankAccountInfo will be return")
-    void successfulReturn() throws Exception {
+    void successfulReturn() {
         List<BankAccountInfo> bankAccountInfos = new ArrayList<>();
         bankAccountInfos.add(new BankAccountInfo(
                 UUID.randomUUID(),
@@ -52,39 +46,28 @@ class BankAccountInfoServiceTest {
                 UUID.randomUUID(),
                 new com.mfirsov.model.BankAccount("TestName1", "TestLastName1", "TestPatronymic1", com.mfirsov.model.BankAccount.AccountType.CREDIT),
                 new Address("TestStreet1", "TestCity1", "TestState1")));
-        when(customCassandraRepository.findAll()).thenReturn(bankAccountInfos);
-        BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoRequest.newBuilder()
-                .setAccountType(BankAccount.AccountType.CREDIT.name())
+        lenient().when(customCassandraRepository.findAll()).thenReturn(Flux.fromIterable(bankAccountInfos));
+        BankAccountInfoProto.BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoProto.BankAccountInfoRequest.newBuilder()
+                .setAccountType(BankAccountInfoProto.BankAccount.AccountType.CREDIT.name())
                 .build();
-        StreamRecorder<BankAccountInfoResponse> responseObserver = StreamRecorder.create();
-        bankAccountInfoService.getBankAccountInfo(bankAccountInfoRequest, responseObserver);
-        if (!responseObserver.awaitCompletion(5, TimeUnit.SECONDS)) {
-            fail("The call did not terminate in time");
-        }
-        assertNull(responseObserver.getError());
-        List<BankAccountInfoResponse> results = responseObserver.getValues();
-        assertEquals(1, results.size());
-        BankAccountInfoResponse actualResponse = results.get(0);
-        log.info("Following object was received: {}", actualResponse.toString());
-        assertNotNull(actualResponse);
+        Mono<BankAccountInfoProto.BankAccountInfoResponse> actualBankAccountInfo = bankAccountInfoService.getBankAccountInfo(Mono.just(bankAccountInfoRequest));
+        assertNotNull(actualBankAccountInfo.subscribe(bankAccountInfoResponse -> log.info("Following object was received: {}", bankAccountInfoResponse)));
+
     }
 
     @Test
     @DisplayName("Empty return")
-    void emptyReturn() throws Exception {
+    void emptyReturn() {
         List<BankAccountInfo> bankAccountInfos = new ArrayList<>();
-        when(customCassandraRepository.findAll()).thenReturn(bankAccountInfos);
-        BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoRequest.newBuilder()
-                .setAccountType(BankAccount.AccountType.CREDIT.name())
+        when(customCassandraRepository.findAll()).thenReturn(Flux.empty());
+        BankAccountInfoProto.BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoProto.BankAccountInfoRequest.newBuilder()
+                .setAccountType(BankAccountInfoProto.BankAccount.AccountType.CREDIT.name())
                 .build();
-        StreamRecorder<BankAccountInfoResponse> responseObserver = StreamRecorder.create();
-        bankAccountInfoService.getBankAccountInfo(bankAccountInfoRequest, responseObserver);
-        if (!responseObserver.awaitCompletion(5, TimeUnit.SECONDS)) {
-            fail("The call did not terminate in time");
-        }
+        StreamRecorder<BankAccountInfoProto.BankAccountInfoResponse> responseObserver = StreamRecorder.create();
+        bankAccountInfoService.getBankAccountInfo(Mono.just(bankAccountInfoRequest));
         assertNull(responseObserver.getError());
-        List<BankAccountInfoResponse> results = responseObserver.getValues();
-        BankAccountInfoResponse actualResponse = results.get(0);
+        List<BankAccountInfoProto.BankAccountInfoResponse> results = responseObserver.getValues();
+        BankAccountInfoProto.BankAccountInfoResponse actualResponse = results.get(0);
         log.info("Following object was received: {}", actualResponse.toString());
         assertNotNull(actualResponse);
         assertTrue(actualResponse.toString().isBlank());

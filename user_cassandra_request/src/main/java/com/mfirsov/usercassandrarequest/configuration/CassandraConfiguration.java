@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
-import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
+import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 @Configuration
 @EnableCassandraRepositories
 @ComponentScan(basePackages = {"com.mfirsov.repository", "com.mfirsov.usercassandrarequest"})
-public class CassandraConfiguration extends AbstractCassandraConfiguration {
+public class CassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
     @Value("${spring.data.cassandra.keyspace-name}")
     private String keySpace;
@@ -20,10 +20,4 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
         return keySpace;
     }
 
-    @Override
-    public CassandraClusterFactoryBean cluster() {
-        CassandraClusterFactoryBean cassandraClusterFactoryBean = super.cluster();
-        cassandraClusterFactoryBean.setJmxReportingEnabled(false);
-        return cassandraClusterFactoryBean;
-    }
 }

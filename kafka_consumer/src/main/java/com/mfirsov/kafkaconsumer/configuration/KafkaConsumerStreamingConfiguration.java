@@ -55,8 +55,11 @@ public class KafkaConsumerStreamingConfiguration {
     @Value("${kafka.bank.account.info.topic}")
     private String bankAccountInfoTopic;
 
-    @Autowired
-    private CustomCassandraRepository customCassandraRepository;
+    private final CustomCassandraRepository customCassandraRepository;
+
+    public KafkaConsumerStreamingConfiguration(CustomCassandraRepository customCassandraRepository) {
+        this.customCassandraRepository = customCassandraRepository;
+    }
 
     @Bean
     public ValueJoiner<BankAccount, Address, BankAccountInfo> valueJoiner() {

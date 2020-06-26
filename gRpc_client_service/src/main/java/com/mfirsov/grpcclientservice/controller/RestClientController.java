@@ -3,6 +3,7 @@ package com.mfirsov.grpcclientservice.controller;
 import com.mfirsov.grpcclientservice.client.GRpcClient;
 import com.mfirsov.grpcclientservice.model.BankAccountInfosResponse;
 import com.mfirsov.grpcclientservice.service.GRpcToModelConverter;
+import com.mfirsov.grpcservice.service.BankAccountInfoProto;
 import com.mfirsov.model.BankAccount;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +14,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @Log4j2
 public class RestClientController {
 
-    @Autowired
-    private GRpcClient gRpcClient;
+    private final GRpcClient gRpcClient;
+
+    public RestClientController(GRpcClient gRpcClient) {
+        this.gRpcClient = gRpcClient;
+    }
 
     @GetMapping(path = "/getBankAccountInfos",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<Object> getBankAccountInfos(@RequestParam("accountType") String accountType) {
-        try {
-            BankAccount.AccountType.valueOf(accountType);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        BankAccountInfosResponse bankAccountInfosResponse = GRpcToModelConverter.convert(gRpcClient.getBankAccountInfo(accountType));
-        log.info("Following BankAccountInfo List was received from GRpc: " + bankAccountInfosResponse);
-        return ResponseEntity.ok(bankAccountInfosResponse);
+            produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Mono<BankAccountInfoProto.BankAccountInfoResponse> getBankAccountInfo(@RequestParam("accountType") String accountType) {
+        BankAccount.AccountType.valueOf(accountType);
+//        BankAccountInfosResponse bankAccountInfosResponse = GRpcToModelConverter.convert(gRpcClient.getBankAccountInfo(accountType));
+//        log.info("Following BankAccountInfo List was received from GRpc: " + bankAccountInfosResponse);
+        return gRpcClient.getBankAccountInfo(accountType);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.mfirsov.model;
 
-import com.datastax.driver.core.DataType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,13 @@ import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 @UserDefinedType(value = "address")
 public class Address {
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String street;
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String city;
 
-    @CassandraType(type = DataType.Name.TEXT)
+    @CassandraType(type = CassandraType.Name.TEXT)
     private String state;
 
 }
