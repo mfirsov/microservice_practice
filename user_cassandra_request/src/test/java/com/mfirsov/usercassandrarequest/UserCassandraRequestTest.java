@@ -7,71 +7,78 @@ import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.model.BankAccountInfoResponse;
 import com.mfirsov.repository.CustomCassandraRepository;
 import com.mfirsov.usercassandrarequest.controller.UserCassandraController;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {UserCassandraController.class})
-@WebMvcTest
-@AutoConfigureMockMvc
+@ExtendWith({MockitoExtension.class})
+@WebFluxTest(controllers = UserCassandraController.class)
 public class UserCassandraRequestTest {
 
     @MockBean
     CustomCassandraRepository customCassandraRepository;
 
     @Autowired
-    MockMvc mockMvc;
+    WebTestClient webClient;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @DisplayName("Verify /bankaccountinfo/{uuid} with correct and existing UUID returns BankAccountInfo")
+    @DisplayName("Verify api/v1/bank_account_info/{uuid} with correct and existing UUID returns BankAccountInfo")
     void successfulResult() throws Exception {
         BankAccount bankAccountStub = new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
         Address addressStub = new Address("TestStreet", "TestCity", "TestState");
         BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountStub, addressStub);
         Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.just(bankAccountInfo));
 
-        MvcResult mvcResult = mockMvc
-                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", bankAccountStub.getUuid().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-        Assertions.assertEquals(bankAccountInfo, objectMapper.readValue(mvcResult.getResponse().getContentAsString(), BankAccountInfoResponse.class).getBankAccountInfo());
+//        MvcResult mvcResult = mockMvc
+//                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", bankAccountStub.getUuid().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
+//                .andReturn();
+
+        webClient.get()
+                .uri("api/v1/bank_account_info/{uuid}", bankAccountStub.getUuid().toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BankAccountInfoResponse.class);
+
+//        Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+//        Assertions.assertEquals(bankAccountInfo, objectMapper.readValue(mvcResult.getResponse().getContentAsString(), BankAccountInfoResponse.class).getBankAccountInfo());
     }
 
     @Test
     @DisplayName("Verify /bankaccountinfo/{uuid} with correct but doesnt exist UUID will return empty BankAccountInfo")
     void uuidDoesntExist() throws Exception {
         Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.empty());
-        MvcResult mvcResult = mockMvc
-                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-        Assertions.assertNotNull(mvcResult.getResponse().getContentAsString());
-        BankAccountInfo actualBankAccountInfo = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), BankAccountInfoResponse.class).getBankAccountInfo();
-        Assertions.assertAll(() -> {
-            Assertions.assertNull(actualBankAccountInfo.getAddress());
-            Assertions.assertNull(actualBankAccountInfo.getBankAccount());
-        });
+//        MvcResult mvcResult = mockMvc
+//                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON_VALUE))
+//                .andReturn();
+
+        webClient.get()
+                .uri("api/v1/bank_account_info/{uuid}", UUID.randomUUID().toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BankAccountInfoResponse.class)
+                .isEqualTo(new BankAccountInfoResponse(new BankAccountInfo()));
+
+//        Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+//        Assertions.assertNotNull(mvcResult.getResponse().getContentAsString());
+//        BankAccountInfo actualBankAccountInfo = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), BankAccountInfoResponse.class).getBankAccountInfo();
+//        Assertions.assertAll(() -> {
+//            Assertions.assertNull(actualBankAccountInfo.getAddress());
+//            Assertions.assertNull(actualBankAccountInfo.getBankAccount());
+//        });
     }
 
     @Test
@@ -81,11 +88,18 @@ public class UserCassandraRequestTest {
         Address addressStub = new Address("TestStreet", "TestCity", "TestState");
         BankAccountInfo bankAccountInfo = new BankAccountInfo(bankAccountStub, addressStub);
         Mockito.when(customCassandraRepository.findBankAccountInfoByUuid(Mockito.any(UUID.class))).thenReturn(Mono.just(bankAccountInfo));
-        MvcResult mvcResult = mockMvc
-                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", "dfgdfg").accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
-        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().isBlank());
+//        MvcResult mvcResult = mockMvc
+//                .perform(MockMvcRequestBuilders.get("/bankaccountinfo/{uuid}", "dfgdfg").accept(MediaType.APPLICATION_JSON_VALUE))
+//                .andReturn();
+
+        webClient.get()
+                .uri("api/v1/bank_account_info/{uuid}", UUID.randomUUID().toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+//        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
+//        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().isBlank());
     }
 
 

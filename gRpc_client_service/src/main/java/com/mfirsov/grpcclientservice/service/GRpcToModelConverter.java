@@ -12,24 +12,24 @@ import java.util.stream.Collectors;
 
 public class GRpcToModelConverter {
 
-//    public static BankAccountInfosResponse convert(Mono<BankAccountInfoProto.BankAccountInfoResponse> bankAccountInfoResponse) {
-//        return new BankAccountInfosResponse(bankAccountInfoResponse.getBankAccountInfoList().stream().map(bankAccountInfo -> {
-//            BankAccount bankAccount = convertBankAccount(bankAccountInfo.getBankAccount());
-//            return new BankAccountInfo(bankAccount.getUuid(), bankAccount, convertAddress(bankAccountInfo.getAddress()));
-//        }).collect(Collectors.toList()));
-//    }
-//
-//    private static BankAccount convertBankAccount(com.mfirsov.grpcclientservice.service.BankAccount bankAccount) {
-//        return new BankAccount(UUID.fromString(bankAccount.getUuid()),
-//                bankAccount.getFirstName(),
-//                bankAccount.getLastName(),
-//                bankAccount.getPatronymic(),
-//                bankAccount.getAccountNumber(),
-//                BankAccount.AccountType.valueOf(bankAccount.getAccountType().name()));
-//    }
-//
-//    private static Address convertAddress(com.mfirsov.grpcclientservice.service.Address address) {
-//        return new Address(address.getStreet(), address.getCity(), address.getState());
-//    }
+    public static BankAccountInfosResponse convert(BankAccountInfoProto.BankAccountInfoResponse bankAccountInfoResponse) {
+        return new BankAccountInfosResponse(bankAccountInfoResponse.getBankAccountInfoList().stream().map(bankAccountInfo -> {
+            BankAccount bankAccount = convertBankAccount(bankAccountInfo.getBankAccount());
+            return new BankAccountInfo(bankAccount.getUuid(), bankAccount, convertAddress(bankAccountInfo.getAddress()));
+        }).collect(Collectors.toList()));
+    }
+
+    private static BankAccount convertBankAccount(BankAccountInfoProto.BankAccount bankAccount) {
+        return new BankAccount(UUID.fromString(bankAccount.getUuid()),
+                bankAccount.getFirstName(),
+                bankAccount.getLastName(),
+                bankAccount.getPatronymic(),
+                bankAccount.getAccountNumber(),
+                BankAccount.AccountType.valueOf(bankAccount.getAccountType().name()));
+    }
+
+    private static Address convertAddress(BankAccountInfoProto.Address address) {
+        return new Address(address.getStreet(), address.getCity(), address.getState());
+    }
 
 }

@@ -1,87 +1,75 @@
 package com.mfirsov.grpcclientservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mfirsov.grpcclientservice.client.GRpcClient;
 import com.mfirsov.grpcclientservice.model.BankAccountInfosResponse;
-import com.mfirsov.grpcclientservice.service.BankAccountInfoResponse;
+import com.mfirsov.grpcservice.service.BankAccountInfoProto;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static org.assertj.core.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {RestClientController.class})
-@WebMvcTest
-@AutoConfigureMockMvc
+@ExtendWith({MockitoExtension.class})
+@WebFluxTest(controllers = RestClientController.class)
 class RestClientControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private WebTestClient webClient;
 
     @MockBean
     GRpcClient gRpcClient;
 
     @Test
     @DisplayName("Verify RestController will return correct value")
-    void successfulResponse() throws Exception {
+    void successfulResponse() {
         UUID uuid1 = UUID.randomUUID();
         UUID uuid2 = UUID.randomUUID();
         long long1 = ThreadLocalRandom.current().nextLong();
         long long2 = ThreadLocalRandom.current().nextLong();
-        BankAccountInfoResponse bankAccountInfoResponse = BankAccountInfoResponse
+        BankAccountInfoProto.BankAccountInfoResponse bankAccountInfoResponse = BankAccountInfoProto.BankAccountInfoResponse
                 .newBuilder()
-                .addBankAccountInfo(com.mfirsov.grpcclientservice.service.BankAccountInfo
+                .addBankAccountInfo(BankAccountInfoProto.BankAccountInfo
                         .newBuilder()
-                        .setAddress(com.mfirsov.grpcclientservice.service.Address
+                        .setAddress(BankAccountInfoProto.Address
                                 .newBuilder()
                                 .setCity("TestCity")
                                 .setStreet("TestStreet")
                                 .setState("TestState")
                                 .build())
-                        .setBankAccount(com.mfirsov.grpcclientservice.service.BankAccount
+                        .setBankAccount(BankAccountInfoProto.BankAccount
                                 .newBuilder()
-                                .setAccountTypeValue(com.mfirsov.grpcclientservice.service.BankAccount.AccountType.DEBIT_VALUE)
+                                .setAccountTypeValue(BankAccountInfoProto.BankAccount.AccountType.DEBIT_VALUE)
                                 .setAccountNumber(long1)
                                 .setFirstName("TestFirstName")
                                 .setLastName("TestLastName")
                                 .setPatronymic("TestPatronymic")
                                 .setUuid(uuid1.toString())
                                 .build()))
-                .addBankAccountInfo(com.mfirsov.grpcclientservice.service.BankAccountInfo
+                .addBankAccountInfo(BankAccountInfoProto.BankAccountInfo
                         .newBuilder()
-                        .setAddress(com.mfirsov.grpcclientservice.service.Address
+                        .setAddress(BankAccountInfoProto.Address
                                 .newBuilder()
                                 .setCity("TestCity1")
                                 .setStreet("TestStreet1")
                                 .setState("TestState1")
                                 .build())
-                        .setBankAccount(com.mfirsov.grpcclientservice.service.BankAccount
+                        .setBankAccount(BankAccountInfoProto.BankAccount
                                 .newBuilder()
-                                .setAccountTypeValue(com.mfirsov.grpcclientservice.service.BankAccount.AccountType.DEBIT_VALUE)
+                                .setAccountTypeValue(BankAccountInfoProto.BankAccount.AccountType.DEBIT_VALUE)
                                 .setAccountNumber(long2)
                                 .setFirstName("TestFirstName1")
                                 .setLastName("TestLastName1")
@@ -100,50 +88,55 @@ class RestClientControllerTest {
                 new Address("TestStreet1", "TestCity1", "TestState1")));
         BankAccountInfosResponse expectedResponse = new BankAccountInfosResponse();
         expectedResponse.setBankAccountInfos(bankAccountInfos);
-        Mockito.when(gRpcClient.getBankAccountInfo(BankAccount.AccountType.DEBIT.name())).thenReturn(bankAccountInfoResponse);
-        MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .get("/getBankAccountInfos")
-                        .param("accountType", BankAccount.AccountType.DEBIT.name())
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        ObjectMapper objectMapper = new ObjectMapper();
-        BankAccountInfosResponse actualResponse = objectMapper.readValue(result.getResponse().getContentAsString(), BankAccountInfosResponse.class);
-        assertNotNull(actualResponse);
-        assertEquals(expectedResponse, actualResponse);
+        Mockito.when(gRpcClient.getBankAccountInfo(Mockito.anyString())).thenReturn(Mono.just(bankAccountInfoResponse));
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/bank_account_infos")
+                        .queryParam("accountType", BankAccount.AccountType.DEBIT.name())
+                        .build())
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_STREAM_JSON)
+                .expectBody(BankAccountInfosResponse.class)
+                .isEqualTo(expectedResponse);
     }
 
     @Test
     @DisplayName("Verify that RestController returns empty object when no one BankAccountInfo found")
-    void emptyResponse() throws Exception {
-        BankAccountInfoResponse stubResponse = BankAccountInfoResponse.newBuilder().build();
-        Mockito.when(gRpcClient.getBankAccountInfo(BankAccount.AccountType.DEBIT.name())).thenReturn(stubResponse);
-        MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .get("/getBankAccountInfos")
-                        .param("accountType", BankAccount.AccountType.DEBIT.name())
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        ObjectMapper objectMapper = new ObjectMapper();
-        BankAccountInfosResponse actualResponse = objectMapper.readValue(result.getResponse().getContentAsString(), BankAccountInfosResponse.class);
-        assertNotNull(actualResponse);
-        assertEquals(new BankAccountInfosResponse(new ArrayList<>()), actualResponse);
+    void emptyResponse() {
+        BankAccountInfoProto.BankAccountInfoResponse stubResponse = BankAccountInfoProto.BankAccountInfoResponse.newBuilder().build();
+        Mockito.when(gRpcClient.getBankAccountInfo(BankAccount.AccountType.DEBIT.name())).thenReturn(Mono.just(stubResponse));
+
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/bank_account_infos")
+                        .queryParam("accountType", BankAccount.AccountType.DEBIT.name())
+                        .build())
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(BankAccountInfosResponse.class)
+                .isEqualTo(BankAccountInfosResponse
+                        .builder()
+                        .bankAccountInfos(new ArrayList<>())
+                        .build());
     }
 
     @Test
     @DisplayName("Verify RestController returns in case of incorrect AccountType")
-    void incorrectAccountType() throws Exception {
-        BankAccountInfoResponse stubResponse = BankAccountInfoResponse.newBuilder().build();
-        Mockito.when(gRpcClient.getBankAccountInfo(BankAccount.AccountType.DEBIT.name())).thenReturn(stubResponse);
-        MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .get("/getBankAccountInfos")
-                        .param("accountType", "not_a_account_type")
-                        .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
-        assertEquals("No enum constant com.mfirsov.model.BankAccount.AccountType.not_a_account_type", result.getResponse().getContentAsString());
+    void incorrectAccountType() {
+        BankAccountInfoProto.BankAccountInfoResponse stubResponse = BankAccountInfoProto.BankAccountInfoResponse.newBuilder().build();
+        Mockito.when(gRpcClient.getBankAccountInfo(Mockito.anyString())).thenReturn(Mono.just(stubResponse));
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/bank_account_infos")
+                        .queryParam("accountType", "not_a_account_type")
+                        .build())
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("No enum constant com.mfirsov.model.BankAccount.AccountType.not_a_account_type");
     }
 }

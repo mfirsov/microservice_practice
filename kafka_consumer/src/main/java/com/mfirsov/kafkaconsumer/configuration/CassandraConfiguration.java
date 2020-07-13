@@ -6,9 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+import org.springframework.data.cassandra.repository.config.EnableReactiveCassandraRepositories;
 
 @Configuration
-@EnableCassandraRepositories(basePackages = {"com.mfirsov.repository"})
+@EnableReactiveCassandraRepositories(basePackages = {"com.mfirsov.repository"})
 @ComponentScan(basePackages = {"com.mfirsov.repository"})
 public class CassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 

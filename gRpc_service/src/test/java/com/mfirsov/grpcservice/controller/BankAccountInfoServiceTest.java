@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -58,18 +59,13 @@ class BankAccountInfoServiceTest {
     @Test
     @DisplayName("Empty return")
     void emptyReturn() {
-        List<BankAccountInfo> bankAccountInfos = new ArrayList<>();
-        when(customCassandraRepository.findAll()).thenReturn(Flux.empty());
+        lenient().when(customCassandraRepository.findAll()).thenReturn(Flux.empty());
         BankAccountInfoProto.BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoProto.BankAccountInfoRequest.newBuilder()
                 .setAccountType(BankAccountInfoProto.BankAccount.AccountType.CREDIT.name())
                 .build();
-        StreamRecorder<BankAccountInfoProto.BankAccountInfoResponse> responseObserver = StreamRecorder.create();
-        bankAccountInfoService.getBankAccountInfo(Mono.just(bankAccountInfoRequest));
-        assertNull(responseObserver.getError());
-        List<BankAccountInfoProto.BankAccountInfoResponse> results = responseObserver.getValues();
-        BankAccountInfoProto.BankAccountInfoResponse actualResponse = results.get(0);
-        log.info("Following object was received: {}", actualResponse.toString());
-        assertNotNull(actualResponse);
-        assertTrue(actualResponse.toString().isBlank());
+        Mono<BankAccountInfoProto.BankAccountInfoResponse> actualBankAccountInfo = bankAccountInfoService.getBankAccountInfo(Mono.just(bankAccountInfoRequest));
+        log.info("Following object was received: {}", actualBankAccountInfo);
+        assertNotNull(actualBankAccountInfo.block());
+        assertTrue(actualBankAccountInfo.hasElement().block());
     }
 }

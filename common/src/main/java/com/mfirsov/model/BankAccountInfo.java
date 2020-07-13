@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Table("bank_account_info")
 public class BankAccountInfo {
 
-    @Id
+    @PrimaryKey
     @JsonIgnore
     @CassandraType(type = CassandraType.Name.UUID)
     private UUID uuid;

@@ -17,7 +17,7 @@ public class GRpcClient {
 
     public Mono<BankAccountInfoProto.BankAccountInfoResponse> getBankAccountInfo(String accountType) {
         BankAccountInfoProto.BankAccountInfoRequest request = BankAccountInfoProto.BankAccountInfoRequest.newBuilder().setAccountType(accountType).build();
-        return bankAccountInfoServiceStub.getBankAccountInfo(request);
+        return bankAccountInfoServiceStub.getBankAccountInfo(request).onErrorReturn(IllegalArgumentException.class, BankAccountInfoProto.BankAccountInfoResponse.newBuilder().build());
     }
 
 }

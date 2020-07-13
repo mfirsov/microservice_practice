@@ -3,6 +3,7 @@ package com.mfirsov.usercassandrarequest.controller;
 import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.model.BankAccountInfoResponse;
 import com.mfirsov.repository.CustomCassandraRepository;
+import com.mfirsov.usercassandrarequest.service.BankAccountInfoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,17 +20,17 @@ import java.util.UUID;
 @Log4j2
 public class UserCassandraController {
 
-    private final CustomCassandraRepository customCassandraRepository;
+    private final BankAccountInfoService bankAccountInfoService;
 
-    public UserCassandraController(CustomCassandraRepository customCassandraRepository) {
-        this.customCassandraRepository = customCassandraRepository;
+    public UserCassandraController(BankAccountInfoService bankAccountInfoService) {
+        this.bankAccountInfoService = bankAccountInfoService;
     }
 
-    @GetMapping(value = "/bankaccountinfo/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "api/v1/bank_account_info/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
     Mono<BankAccountInfoResponse> getBankAccountFromCassandra(@PathVariable String uuid) {
         UUID parsedUuid = UUID.fromString(uuid);
-        Mono<BankAccountInfo> bankAccountInfo = customCassandraRepository.findBankAccountInfoByUuid(parsedUuid);
-        return bankAccountInfo.map(BankAccountInfoResponse::new);
+//        Mono<BankAccountInfo> bankAccountInfo = customCassandraRepository.findBankAccountInfoByUuid(parsedUuid);
+        return bankAccountInfoService.getBankAccountInfoByUuid(parsedUuid).map(BankAccountInfoResponse::new);
     }
 
 }

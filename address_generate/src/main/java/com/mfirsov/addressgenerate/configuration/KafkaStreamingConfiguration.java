@@ -1,7 +1,7 @@
 package com.mfirsov.addressgenerate.configuration;
 
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
-import com.mfirsov.addressgenerate.client.AddressGeneratorClientImpl;
+import com.mfirsov.addressgenerate.client.SimpleAddressGeneratorClient;
 import com.mfirsov.addressgenerate.util.BankAccountToAddressValueMapper;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.ValueMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,6 +23,7 @@ import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,14 +53,15 @@ public class KafkaStreamingConfiguration {
     @Value("${spring.kafka.streams.client-id}")
     private String clientId;
 
-    @Bean
-    public AddressGeneratorClient addressGeneratorClient() {
-        return new AddressGeneratorClientImpl();
+    private final AddressGeneratorClient addressGeneratorClient;
+
+    public KafkaStreamingConfiguration(AddressGeneratorClient addressGeneratorClient) {
+        this.addressGeneratorClient = addressGeneratorClient;
     }
 
     @Bean
     public ValueMapper<BankAccount, Address> valueMapper() {
-        return new BankAccountToAddressValueMapper();
+        return new BankAccountToAddressValueMapper(addressGeneratorClient);
     }
 
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)

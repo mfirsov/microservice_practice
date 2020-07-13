@@ -6,6 +6,7 @@ import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
 import com.mfirsov.repository.CustomCassandraRepository;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -24,6 +25,7 @@ import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,7 @@ import java.util.UUID;
 @Configuration
 @EnableKafkaStreams
 @Import(value = {CassandraConfiguration.class})
+@Log4j2
 public class KafkaConsumerStreamingConfiguration {
 
     @Value("${spring.kafka.streams.bootstrap-servers}")

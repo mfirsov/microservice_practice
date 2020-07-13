@@ -1,4 +1,4 @@
-package com.mfirsov.repository;
+package com.mfirsov.usercassandrarequest.service;
 
 import com.mfirsov.model.BankAccountInfo;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
