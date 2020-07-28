@@ -1,10 +1,9 @@
 package com.mfirsov.addressgenerate.configuration;
 
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
-import com.mfirsov.addressgenerate.client.SimpleAddressGeneratorClient;
 import com.mfirsov.addressgenerate.util.BankAccountToAddressValueMapper;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -12,7 +11,6 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.ValueMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +21,6 @@ import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;

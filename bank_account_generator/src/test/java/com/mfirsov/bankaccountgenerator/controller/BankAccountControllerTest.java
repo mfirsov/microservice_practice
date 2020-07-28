@@ -1,28 +1,17 @@
 package com.mfirsov.bankaccountgenerator.controller;
 
 import com.mfirsov.bankaccountgenerator.model.BankAccount;
-import com.mfirsov.bankaccountgenerator.service.IBankAccountService;
+import com.mfirsov.bankaccountgenerator.service.BankAccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.util.StringUtils;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import reactor.core.publisher.Mono;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith({MockitoExtension.class})
@@ -30,7 +19,7 @@ import static org.mockito.Mockito.lenient;
 class BankAccountControllerTest {
 
     @MockBean
-    IBankAccountService bankAccountService;
+    BankAccountService bankAccountService;
 
     @Autowired
     private WebTestClient webClient;

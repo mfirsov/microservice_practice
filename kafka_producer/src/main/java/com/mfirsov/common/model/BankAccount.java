@@ -1,4 +1,4 @@
-package com.mfirsov.bankaccountgenerator.model;
+package com.mfirsov.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,15 +14,23 @@ import java.util.concurrent.ThreadLocalRandom;
 @Builder
 public class BankAccount {
 
-    private UUID uuid = UUID.randomUUID();
+    private UUID uuid;
     private String firstName;
     private String lastName;
     private String patronymic;
-    private long accountNumber = ThreadLocalRandom.current().nextLong(0, Long.MAX_VALUE);
+    private long accountNumber;
+    private AccountType accountType;
 
-    public BankAccount(String firstName, String lastName, String patronymic) {
+    public BankAccount(String firstName, String lastName, String patronymic, AccountType credit) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
+        this.accountType = credit;
+        this.uuid = UUID.randomUUID();
+        this.accountNumber = ThreadLocalRandom.current().nextLong();
+    }
+
+    public enum AccountType {
+        DEBIT,CREDIT
     }
 }

@@ -1,7 +1,8 @@
 package com.mfirsov.kafkaproducer.service;
 
 import com.mfirsov.kafkaproducer.client.BankAccountGeneratorClient;
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.BankAccount;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -10,16 +11,14 @@ import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import reactor.kafka.sender.SenderRecord;
 
-import javax.annotation.PostConstruct;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor
 public class KafkaProducerService {
 
     @Value("${kafka.topic:bank_account}")
@@ -27,11 +26,6 @@ public class KafkaProducerService {
 
     private final ReactiveKafkaProducerTemplate<UUID, BankAccount> reactiveKafkaProducer;
     private final BankAccountGeneratorClient bankAccountGeneratorClient;
-
-    public KafkaProducerService(ReactiveKafkaProducerTemplate<UUID, BankAccount> reactiveKafkaProducer, BankAccountGeneratorClient bankAccountGeneratorClient) {
-        this.reactiveKafkaProducer = reactiveKafkaProducer;
-        this.bankAccountGeneratorClient = bankAccountGeneratorClient;
-    }
 
     public void setTopic(String topic) {
         this.topic = topic;
@@ -41,16 +35,19 @@ public class KafkaProducerService {
     public void produceToKafka() {
         Mono<BankAccount> bankAccount = bankAccountGeneratorClient
                 .getBankAccount()
-                .doOnSuccess(bankAccount1 -> log.info("Following message received: {}", bankAccount1));
-
-        Mono<BankAccount> filteredBankAccount = bankAccount
                 .map(this::setRandomAccountType)
-                .filter(bankAccount1 -> bankAccount1.getFirstName().length() >= 5);
+                .filter(ba -> ba.getFirstName().length() >= 5)
+                .doOnSuccess(ba -> log.debug("Following message received: {}", ba));
+
+//        Mono<BankAccount> filteredBankAccount = bankAccount
+//                .map(this::setRandomAccountType)
+//                .filter(ba -> ba.getFirstName().length() >= 5);
+
         reactiveKafkaProducer
-                .send(filteredBankAccount
-                        .map(filteredBankAccount1 -> SenderRecord.create(
-                                new ProducerRecord<>(topic, filteredBankAccount1.getUuid(), filteredBankAccount1),
-                                filteredBankAccount1.getUuid())))
+                .send(bankAccount
+                        .map(ba -> SenderRecord.create(
+                                new ProducerRecord<>(topic, ba.getUuid(), ba),
+                                ba.getUuid())))
                 .doOnError(log::error)
                 .subscribe(r -> {
                     RecordMetadata recordMetadata = r.recordMetadata();

@@ -1,6 +1,6 @@
 package com.mfirsov.kafkaproducer.client;
 
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.BankAccount;
 import reactor.core.publisher.Mono;
 
 public interface BankAccountGeneratorClient {

@@ -1,7 +1,7 @@
 package com.mfirsov.addressgenerate.client;
 
 import com.mfirsov.addressgenerate.model.ResponseBody;
-import com.mfirsov.model.Address;
+import com.mfirsov.common.model.Address;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

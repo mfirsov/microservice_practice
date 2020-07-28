@@ -1,6 +1,6 @@
 package com.mfirsov.addressgenerate.client;
 
-import com.mfirsov.model.Address;
+import com.mfirsov.common.model.Address;
 
 public interface AddressGeneratorClient {
 

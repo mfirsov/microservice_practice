@@ -2,7 +2,7 @@ package com.mfirsov.kafkaproducer.configuration;
 
 import com.mfirsov.kafkaproducer.client.BankAccountGeneratorClient;
 import com.mfirsov.kafkaproducer.client.BankAccountGeneratorClientImpl;
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.BankAccount;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.beans.factory.annotation.Value;

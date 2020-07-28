@@ -1,14 +1,9 @@
 package com.mfirsov.kafkaproducer.client;
 
-import com.mfirsov.model.BankAccount;
-import org.springframework.beans.factory.annotation.Value;
+import com.mfirsov.common.model.BankAccount;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 public class BankAccountGeneratorClientImpl implements BankAccountGeneratorClient {
 

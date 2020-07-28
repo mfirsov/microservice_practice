@@ -1,9 +1,9 @@
 package com.mfirsov.rsocketclient.controller;
 
 import com.mfirsov.model.BankAccountInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.reactivestreams.Publisher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.UUID;
 
 @RestController
 @Log4j2
+@RequiredArgsConstructor
 public class RSocketRestController {
 
-    @Autowired
-    private RSocketRequester rSocketRequester;
+    private final RSocketRequester rSocketRequester;
 
     @GetMapping(path = "/getBankAccountInfoByUUID")
     @ResponseBody Publisher<BankAccountInfo> getBankAccountInfoByUUID(@RequestParam("uuid") UUID uuid) {

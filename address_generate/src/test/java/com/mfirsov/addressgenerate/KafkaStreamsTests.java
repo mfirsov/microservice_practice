@@ -1,8 +1,8 @@
 package com.mfirsov.addressgenerate;
 
 import com.mfirsov.addressgenerate.client.AddressGeneratorClient;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
