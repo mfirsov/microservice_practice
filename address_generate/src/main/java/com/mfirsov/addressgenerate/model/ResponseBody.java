@@ -1,6 +1,7 @@
 package com.mfirsov.addressgenerate.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.mfirsov.common.model.Address;
@@ -8,6 +9,7 @@ import com.mfirsov.common.model.Address;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ResponseBody {
 
     private Address results;

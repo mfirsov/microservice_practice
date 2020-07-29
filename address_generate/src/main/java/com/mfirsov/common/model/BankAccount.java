@@ -1,6 +1,7 @@
 package com.mfirsov.common.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BankAccount {
 
     private UUID uuid;

@@ -1,11 +1,11 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mfirsov.kafkaconsumer.repository.CustomCassandraRepository;
 import com.mfirsov.kafkaconsumer.util.BankAccountAndAddressValueJoiner;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.repository.CustomCassandraRepository;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -14,27 +14,22 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.ValueJoiner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
-import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Configuration
-@EnableKafkaStreams
-@Import(value = {CassandraConfiguration.class})
+//@Configuration
+//@EnableKafkaStreams
 @Log4j2
+@Deprecated
 public class KafkaConsumerStreamingConfiguration {
 
     @Value("${spring.kafka.streams.bootstrap-servers}")

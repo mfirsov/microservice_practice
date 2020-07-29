@@ -1,0 +1,12 @@
+bank:
+  account:
+    generator:
+      address: http://localhost:8081
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com:
+      mfirsov: DEBUG

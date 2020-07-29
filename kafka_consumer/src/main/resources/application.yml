@@ -1,0 +1,7 @@
+server.port: 8083
+spring:
+  data:
+    cassandra:
+      port: 9042
+      keyspace-name: bank
+      contact-points: localhost

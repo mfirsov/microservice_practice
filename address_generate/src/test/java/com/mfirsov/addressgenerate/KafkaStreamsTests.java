@@ -27,6 +27,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class KafkaStreamsTests {
         bankAccountProducer.send(new ProducerRecord<>("bank_account", bankAccount.getUuid(), bankAccount));
         bankAccountProducer.flush();
         Address address = new Address("TestStreet", "TestCity", "TestState");
-        Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(address);
+        Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(Mono.just(address));
         ConsumerRecord<UUID, Address> consumerRecord = records.poll(10000, TimeUnit.MILLISECONDS);
         Assertions.assertNotNull(consumerRecord);
         Assertions.assertEquals(address, consumerRecord.value());
@@ -103,7 +104,7 @@ public class KafkaStreamsTests {
         bankAccountProducer.send(new ProducerRecord<>("bank_account", bankAccount.getUuid(), bankAccount));
         bankAccountProducer.flush();
         Address address = new Address("TestStreet", "TestCity", "TestState");
-        Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(address);
+        Mockito.when(addressGeneratorClient.getAddressFromAddressGenerator()).thenReturn(Mono.just(address));
         ConsumerRecord<UUID, Address> consumerRecord = records.poll(10000, TimeUnit.MILLISECONDS);
         Assertions.assertNull(consumerRecord);
     }

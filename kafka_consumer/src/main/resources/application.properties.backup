@@ -1,0 +1,15 @@
+server.port=8083
+spring.data.cassandra.port=9042
+spring.data.cassandra.keyspace-name=bank
+spring.data.cassandra.contact-points=localhost
+spring.kafka.streams.replication-factor=1
+spring.kafka.streams.application-id=kafka_consumer
+spring.kafka.streams.bootstrap-servers=localhost:9092
+kafka.bank.topic=bank_account
+kafka.bank.account.info.topic=bank_account_info
+kafka.address.topic=address
+spring.kafka.streams.auto-startup=true
+spring.main.allow-bean-definition-overriding=true
+spring.kafka.streams.client-id=kafka_consumer
+spring.kafka.consumer.group-id=consumer
+spring.kafka.producer.client-id=kafka_consumer
