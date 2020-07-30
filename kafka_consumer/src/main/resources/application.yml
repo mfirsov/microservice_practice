@@ -1,7 +1,38 @@
+#
+#Server properties
 server.port: 8083
+#
+#Cassandra
 spring:
+  data.cassandra:
+    port: 9042
+    keyspace-name: bank
+    contact-points: localhost
+  jpa.hibernate.ddl-auto: update
   data:
     cassandra:
-      port: 9042
-      keyspace-name: bank
-      contact-points: localhost
+      local-datacenter: datacenter1
+  #
+#Spring Cloud Kafka Streams binder config
+spring.cloud.stream:
+    kafka.streams.binder:
+      brokers: localhost:9092
+      application-id: kafka_consumer
+      configuration:
+        commit.interval.ms: 1000
+    bindings:
+      bankAccountInfo-in-0:
+        destination: bank_account
+        consumer:
+          useNativeDecoding: false
+      bankAccountInfo-in-1:
+        destination: address
+        consumer:
+          useNativeDecoding: false
+      bankAccountInfo-out-0:
+        destination: bank_account_info
+        producer:
+          useNativeEncoding: false
+#
+#Logging properties
+logging.level.com.mfirsov: DEBUG

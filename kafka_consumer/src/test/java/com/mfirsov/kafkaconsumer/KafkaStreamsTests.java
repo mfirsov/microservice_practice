@@ -1,9 +1,9 @@
 package com.mfirsov.kafkaconsumer;
 
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.repository.CustomCassandraRepository;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.kafkaconsumer.repository.CustomCassandraRepository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.cassandra.ReactiveSession;
 import org.springframework.data.cassandra.SessionFactory;
-import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
@@ -56,9 +55,6 @@ public class KafkaStreamsTests {
 
     @MockBean
     CustomCassandraRepository customCassandraRepository;
-
-    @MockBean
-    CassandraSessionFactoryBean cassandraSessionFactoryBean;
 
     @MockBean
     SessionFactory sessionFactory;
@@ -106,7 +102,7 @@ public class KafkaStreamsTests {
     @Test
     @DisplayName("Verify that BankAccount and Address with the same UUID are combined into BankAccountInfo")
     void testKafkaStream() throws InterruptedException {
-        BankAccount bankAccount = new BankAccount("Testname", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
+        BankAccount bankAccount = new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
         Address address = new Address("TestStreet", "TestCity", "TestState");
         Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfo.class)))
                 .thenAnswer(invocation -> cassandraBankAccountInfo = invocation.getArgument(0));
@@ -115,6 +111,7 @@ public class KafkaStreamsTests {
         bankAccountProducer.flush();
         addressProducer.flush();
         ConsumerRecord<UUID, BankAccountInfo> consumerRecord = records.poll(2000, TimeUnit.MILLISECONDS);
+        assertNotNull(consumerRecord);
         BankAccountInfo kafkaBankAccountInfo = consumerRecord.value();
         assertNotNull(kafkaBankAccountInfo);
         assertNotNull(cassandraBankAccountInfo);
@@ -123,7 +120,7 @@ public class KafkaStreamsTests {
     @Test
     @DisplayName("Verify that BankAccount and Address with different UUID are not combined into BankAccountInfo")
     void nullBankAccountInfoFromKafka() throws InterruptedException {
-        BankAccount bankAccount = new BankAccount("Testname1", "TestLastName1", "TestPatronymic1", BankAccount.AccountType.CREDIT);
+        BankAccount bankAccount = new BankAccount("TestName1", "TestLastName1", "TestPatronymic1", BankAccount.AccountType.CREDIT);
         Address address = new Address("TestStreet1", "TestCity1", "TestState1");
         Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfo.class)))
                 .thenAnswer(invocation -> cassandraBankAccountInfo = invocation.getArgument(0));

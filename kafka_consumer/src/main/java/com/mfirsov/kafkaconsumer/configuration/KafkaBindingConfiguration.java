@@ -29,9 +29,11 @@ public class KafkaBindingConfiguration {
                         .bankAccount(bankAccount)
                         .uuid(bankAccount.getUuid())
                         .build())
+                .peek((key, value) -> log.debug("Following Object was combined with key: {} and value: {}", key, value))
                 .peek((uuid, bankAccountInfo) -> customCassandraRepository
                         .insert(bankAccountInfo)
-                        .doOnSuccess(ba -> log.debug("Following BankAccountInfo was saved in Cassandra:{}", ba)));
+                        .doOnSuccess(bai -> log.debug("Following BankAccountInfo was saved in Cassandra:{}", bai))
+                        .doOnError(log::error));
     }
 
 }

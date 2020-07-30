@@ -1,13 +1,11 @@
 server:
   port: 8085
 spring.cloud.stream:
-  kafka:
-    streams:
-      binder:
-        brokers: localhost:9092
-        application-id: address_generate
-        configuration:
-          commit.interval.ms: 1000
+  kafka.streams.binder:
+    brokers: localhost:9092
+    application-id: address_generate
+    configuration:
+      commit.interval.ms: 1000
   bindings:
     address-in-0:
       destination: bank_account
@@ -22,7 +20,4 @@ address:
   generator:
     address: https://randomapi.com/api/hdh1qlye?key=1FK1-1UB8-FCVP-MBRA&noinfo&sole
 
-logging:
-  level:
-    com:
-      mfirsov: DEBUG
+logging.level.com.mfirsov: DEBUG

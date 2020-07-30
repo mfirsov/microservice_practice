@@ -1,6 +1,7 @@
 package com.mfirsov.common.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
@@ -9,6 +10,7 @@ import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @UserDefinedType(value = "address")
 public class Address {
 
