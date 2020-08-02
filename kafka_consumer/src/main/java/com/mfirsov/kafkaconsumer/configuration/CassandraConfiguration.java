@@ -1,6 +1,8 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.mfirsov.kafkaconsumer.entities.BankAccountInfoEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.config.SchemaAction;
@@ -11,44 +13,45 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableReactiveCassandraRepositories
 public class CassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
-    @Value("${spring.data.cassandra.keyspace-name}")
-    private String keySpace;
+    private final CassandraProperties cassandraProperties;
 
     @Override
     protected String getKeyspaceName() {
-        return keySpace;
+        return cassandraProperties.getKeyspaceName();
     }
 
     @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.CREATE_IF_NOT_EXISTS;
+        return SchemaAction.valueOf(cassandraProperties.getSchemaAction().toUpperCase());
     }
 
     @Override
     protected String getContactPoints() {
-        return "localhost";
+        return cassandraProperties.getContactPoints().get(0);
     }
 
     @Override
     public String[] getEntityBasePackages() {
-        return new String[] {"com.mfirsov.common.model"};
+        return new String[] {BankAccountInfoEntity.class.getPackage().getName()};
     }
 
     @Override
     protected int getPort() {
-        return 9042;
+        return cassandraProperties.getPort();
     }
 
     @Override
     protected String getLocalDataCenter() {
-        return "datacenter1";
+        return cassandraProperties.getLocalDatacenter();
     }
 
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
-        return Collections.singletonList(CreateKeyspaceSpecification.createKeyspace("bank").ifNotExists());
+        return Collections.singletonList(CreateKeyspaceSpecification.createKeyspace(getKeyspaceName()).ifNotExists());
     }
+
 }

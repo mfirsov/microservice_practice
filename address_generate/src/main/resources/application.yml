@@ -6,15 +6,15 @@ spring.cloud.stream:
     application-id: address_generate
     configuration:
       commit.interval.ms: 1000
+      cache:
+        max:
+          bytes:
+            buffering: 0
   bindings:
     address-in-0:
       destination: bank_account
-      consumer:
-        useNativeEncoding: false
     address-out-0:
       destination: address
-      producer:
-        useNativeEncoding: false
 
 address:
   generator:

@@ -15,8 +15,8 @@ message BankAccountInfoResponse {
 }
 
 message BankAccountInfo {
-    BankAccount bankAccount = 1;
-    Address address = 2;
+    BankAccount bankAccountEntity = 1;
+    Address addressEntity = 2;
 }
 
 message Address {

@@ -1,8 +1,7 @@
 package com.mfirsov.usercassandrarequest.controller;
 
-import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.model.BankAccountInfoResponse;
-import com.mfirsov.repository.CustomCassandraRepository;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfoResponse;
 import com.mfirsov.usercassandrarequest.service.BankAccountInfoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

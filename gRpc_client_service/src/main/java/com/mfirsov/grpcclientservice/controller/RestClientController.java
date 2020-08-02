@@ -2,7 +2,7 @@ package com.mfirsov.grpcclientservice.controller;
 
 import com.mfirsov.grpcclientservice.client.GRpcClient;
 import com.mfirsov.grpcclientservice.service.GRpcToModelConverter;
-import com.mfirsov.model.BankAccount;
+import com.mfirsov.common.model.BankAccount;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

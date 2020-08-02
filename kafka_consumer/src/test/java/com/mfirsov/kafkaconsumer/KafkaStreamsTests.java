@@ -3,6 +3,7 @@ package com.mfirsov.kafkaconsumer;
 import com.mfirsov.common.model.Address;
 import com.mfirsov.common.model.BankAccount;
 import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.kafkaconsumer.entities.BankAccountInfoEntity;
 import com.mfirsov.kafkaconsumer.repository.CustomCassandraRepository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.Producer;
@@ -104,7 +105,7 @@ public class KafkaStreamsTests {
     void testKafkaStream() throws InterruptedException {
         BankAccount bankAccount = new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT);
         Address address = new Address("TestStreet", "TestCity", "TestState");
-        Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfo.class)))
+        Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfoEntity.class)))
                 .thenAnswer(invocation -> cassandraBankAccountInfo = invocation.getArgument(0));
         bankAccountProducer.send(new ProducerRecord<>("bank_account", bankAccount.getUuid(), bankAccount));
         addressProducer.send(new ProducerRecord<>("address", bankAccount.getUuid(), address));
@@ -122,7 +123,7 @@ public class KafkaStreamsTests {
     void nullBankAccountInfoFromKafka() throws InterruptedException {
         BankAccount bankAccount = new BankAccount("TestName1", "TestLastName1", "TestPatronymic1", BankAccount.AccountType.CREDIT);
         Address address = new Address("TestStreet1", "TestCity1", "TestState1");
-        Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfo.class)))
+        Mockito.when(customCassandraRepository.insert(Mockito.any(BankAccountInfoEntity.class)))
                 .thenAnswer(invocation -> cassandraBankAccountInfo = invocation.getArgument(0));
         bankAccountProducer.send(new ProducerRecord<>("bank_account", bankAccount.getUuid(), bankAccount));
         addressProducer.send(new ProducerRecord<>("address", UUID.randomUUID(), address));

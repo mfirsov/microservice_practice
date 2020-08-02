@@ -1,6 +1,6 @@
 package com.mfirsov.grpcclientservice.model;
 
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

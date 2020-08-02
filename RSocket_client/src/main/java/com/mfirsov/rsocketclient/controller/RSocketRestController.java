@@ -1,6 +1,6 @@
 package com.mfirsov.rsocketclient.controller;
 
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.reactivestreams.Publisher;

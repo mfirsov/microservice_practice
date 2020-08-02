@@ -1,9 +1,9 @@
 package com.mfirsov.kafkaconsumerredis.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;

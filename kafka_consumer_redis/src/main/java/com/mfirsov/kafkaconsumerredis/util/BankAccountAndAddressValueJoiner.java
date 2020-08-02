@@ -1,8 +1,8 @@
 package com.mfirsov.kafkaconsumerredis.util;
 
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
 import org.apache.kafka.streams.kstream.ValueJoiner;
 import org.springframework.stereotype.Component;
 

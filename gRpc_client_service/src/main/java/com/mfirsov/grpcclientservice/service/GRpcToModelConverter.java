@@ -1,11 +1,10 @@
 package com.mfirsov.grpcclientservice.service;
 
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
 import com.mfirsov.grpcclientservice.model.BankAccountInfosResponse;
 import com.mfirsov.grpcservice.service.BankAccountInfoProto;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
-import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.stream.Collectors;

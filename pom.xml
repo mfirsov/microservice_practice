@@ -9,7 +9,6 @@
 		<module>kafka_consumer</module>
         <module>user_cassandra_request</module>
         <module>address_generate</module>
-        <module>common</module>
         <module>gRpc_service</module>
 		<module>gRpc_client_service</module>
         <module>RSocket_server</module>

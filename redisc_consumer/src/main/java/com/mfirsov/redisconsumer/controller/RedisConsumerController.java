@@ -1,6 +1,6 @@
 package com.mfirsov.redisconsumer.controller;
 
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfo;
 import com.mfirsov.redisconsumer.service.RedisSubscriptionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

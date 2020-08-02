@@ -1,8 +1,7 @@
 package com.mfirsov.grpcservice.service;
 
-import com.mfirsov.repository.CustomCassandraRepository;
+import com.mfirsov.grpcservice.repository.CustomCassandraRepository;
 import com.salesforce.grpc.contrib.spring.GrpcService;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @GrpcService

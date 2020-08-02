@@ -1,7 +1,7 @@
 package com.mfirsov.usercassandrarequest.service;
 
-import com.mfirsov.model.BankAccountInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.usercassandrarequest.repository.CustomCassandraRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

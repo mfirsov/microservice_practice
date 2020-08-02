@@ -3,7 +3,6 @@ package com.mfirsov.rsocketserver.service;
 import com.mfirsov.model.Address;
 import com.mfirsov.model.BankAccount;
 import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.rsocketserver.repository.CustomReactiveCassandraRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

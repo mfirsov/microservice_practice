@@ -16,17 +16,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-rsocket</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.mfirsov</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-data-cassandra</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 
 

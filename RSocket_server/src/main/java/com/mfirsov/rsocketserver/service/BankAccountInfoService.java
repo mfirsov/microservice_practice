@@ -1,8 +1,8 @@
 package com.mfirsov.rsocketserver.service;
 
-import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.rsocketserver.repository.CustomReactiveCassandraRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.rsocketserver.repository.CustomCassandraRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -10,21 +10,21 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class BankAccountInfoService {
 
-    @Autowired
-    private CustomReactiveCassandraRepository customReactiveCassandraRepository;
+    private final CustomCassandraRepository customCassandraRepository;
 
     public Mono<BankAccountInfo> getBankAccountInfoByUUID(UUID uuid) {
-        return customReactiveCassandraRepository.findById(uuid);
+        return customCassandraRepository.findById(uuid);
     }
 
     public Flux<BankAccountInfo> getAllBankAccountInfo() {
-        return customReactiveCassandraRepository.findAll();
+        return customCassandraRepository.findAll();
     }
 
     public Mono<Void> deleteBankAccountInfoByUUID(UUID uuid) {
-       return customReactiveCassandraRepository.deleteById(uuid);
+       return customCassandraRepository.deleteById(uuid);
     }
 
 }

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,20 +12,13 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@UserDefinedType("bank_account")
 public class BankAccount {
 
-    @CassandraType(type = CassandraType.Name.UUID)
     private UUID uuid;
-    @CassandraType(type = CassandraType.Name.TEXT)
     private String firstName;
-    @CassandraType(type = CassandraType.Name.TEXT)
     private String lastName;
-    @CassandraType(type = CassandraType.Name.TEXT)
     private String patronymic;
-    @CassandraType(type = CassandraType.Name.DECIMAL)
     private long accountNumber;
-    @CassandraType(type = CassandraType.Name.TEXT)
     private AccountType accountType;
 
     public enum AccountType {

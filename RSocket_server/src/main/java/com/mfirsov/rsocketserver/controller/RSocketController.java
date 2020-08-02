@@ -1,9 +1,8 @@
 package com.mfirsov.rsocketserver.controller;
 
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfo;
 import com.mfirsov.rsocketserver.service.BankAccountInfoService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;

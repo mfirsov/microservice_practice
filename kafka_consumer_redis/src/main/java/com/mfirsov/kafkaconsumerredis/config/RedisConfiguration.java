@@ -1,6 +1,6 @@
 package com.mfirsov.kafkaconsumerredis.config;
 
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.BankAccountInfo;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ReadFrom;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-import java.util.UUID;
 
 @Configuration
 public class RedisConfiguration {

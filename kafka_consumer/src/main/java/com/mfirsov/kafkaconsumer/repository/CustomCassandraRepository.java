@@ -1,13 +1,15 @@
 package com.mfirsov.kafkaconsumer.repository;
 
-import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.kafkaconsumer.entities.BankAccountInfoEntity;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface CustomCassandraRepository extends ReactiveCassandraRepository<BankAccountInfo, UUID> {
+@Repository
+public interface CustomCassandraRepository extends ReactiveCassandraRepository<BankAccountInfoEntity, UUID> {
 
-    Mono<BankAccountInfo> findBankAccountInfoByUuid(UUID uuid);
+    Mono<BankAccountInfoEntity> findBankAccountInfoByUuid(UUID uuid);
 
 }

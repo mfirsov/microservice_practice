@@ -8,8 +8,8 @@ import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 
 @Configuration
-@EnableCassandraRepositories("com.mfirsov.repository")
-@ComponentScan(basePackages = {"com.mfirsov.repository", "com.mfirsov.grpcservice"})
+@EnableCassandraRepositories
+@ComponentScan
 public class CassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
     @Value("${spring.data.cassandra.keyspace-name}")
