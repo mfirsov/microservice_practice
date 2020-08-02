@@ -1,15 +1,13 @@
-package com.mfirsov.kafkaconsumer.entities;
+package com.mfirsov.grpcservice.entities;
 
-import com.datastax.driver.core.DataType;
 import com.mfirsov.common.model.BankAccount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.cassandra.core.mapping.CassandraType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
-import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,26 +15,20 @@ import java.util.concurrent.ThreadLocalRandom;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@UserDefinedType("bank_account_type")
-public class BankAccountEntity implements Serializable {
+@UserDefinedType("bank_account")
+public class BankAccountEntity {
 
-//    @Column("uuid")
-    @CassandraType(type = DataType.Name.UUID)
+    @Column("uuid")
     private UUID uuid;
-//    @Column("first_name")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column("first_name")
     private String firstName;
-//    @Column("last_name")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column("last_name")
     private String lastName;
-//    @Column("patronymic")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column("patronymic")
     private String patronymic;
-//    @Column("account_number")
-    @CassandraType(type = DataType.Name.BIGINT)
+    @Column("account_number")
     private long accountNumber;
-//    @Column("account_type")
-    @CassandraType(type = DataType.Name.TEXT)
+    @Column("account_type")
     private AccountType accountType;
 
     public BankAccountEntity(BankAccount bankAccount) {

@@ -1,18 +1,18 @@
 package com.mfirsov.grpcservice.controller;
 
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.grpcservice.entities.BankAccountInfoEntity;
+import com.mfirsov.grpcservice.repository.CustomCassandraRepository;
 import com.mfirsov.grpcservice.service.BankAccountInfoProto;
 import com.mfirsov.grpcservice.service.BankAccountInfoService;
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccountInfo;
-import com.mfirsov.repository.CustomCassandraRepository;
-import io.grpc.internal.testing.StreamRecorder;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,10 +20,11 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
 @Log4j2
@@ -41,13 +42,14 @@ class BankAccountInfoServiceTest {
         List<BankAccountInfo> bankAccountInfos = new ArrayList<>();
         bankAccountInfos.add(new BankAccountInfo(
                 UUID.randomUUID(),
-                new com.mfirsov.model.BankAccount("TestName", "TestLastName", "TestPatronymic", com.mfirsov.model.BankAccount.AccountType.DEBIT),
+                new BankAccount("TestName", "TestLastName", "TestPatronymic", BankAccount.AccountType.DEBIT),
                 new Address("TestStreet", "TestCity", "TestState")));
         bankAccountInfos.add(new BankAccountInfo(
                 UUID.randomUUID(),
-                new com.mfirsov.model.BankAccount("TestName1", "TestLastName1", "TestPatronymic1", com.mfirsov.model.BankAccount.AccountType.CREDIT),
+                new BankAccount("TestName1", "TestLastName1", "TestPatronymic1", BankAccount.AccountType.CREDIT),
                 new Address("TestStreet1", "TestCity1", "TestState1")));
-        lenient().when(customCassandraRepository.findAll()).thenReturn(Flux.fromIterable(bankAccountInfos));
+        List<BankAccountInfoEntity> bankAccountInfoEntities = bankAccountInfos.stream().map(BankAccountInfoEntity::new).collect(Collectors.toList());
+        lenient().when(customCassandraRepository.findAll()).thenReturn(Flux.fromIterable(bankAccountInfoEntities));
         BankAccountInfoProto.BankAccountInfoRequest bankAccountInfoRequest = BankAccountInfoProto.BankAccountInfoRequest.newBuilder()
                 .setAccountType(BankAccountInfoProto.BankAccount.AccountType.CREDIT.name())
                 .build();

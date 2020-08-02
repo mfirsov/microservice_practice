@@ -1,6 +1,6 @@
 package com.mfirsov.rsocketserver.controller;
 
-import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.rsocketserver.entities.BankAccountInfoEntity;
 import com.mfirsov.rsocketserver.service.BankAccountInfoService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,9 +21,9 @@ public class RSocketController {
     }
 
     @MessageMapping("getBankAccountInfoByUUID")
-    Mono<BankAccountInfo> getBankAccountInfoByUUID(UUID uuid) {
+    Mono<BankAccountInfoEntity> getBankAccountInfoByUUID(UUID uuid) {
         log.info("Searching BankAccountInfo with UUID: {}", uuid);
-        Mono<BankAccountInfo> bankAccountInfoMono = bankAccountInfoService.getBankAccountInfoByUUID(uuid);
+        Mono<BankAccountInfoEntity> bankAccountInfoMono = bankAccountInfoService.getBankAccountInfoByUUID(uuid);
         log.info("Following message was sent: {}", bankAccountInfoMono);
         return bankAccountInfoMono;
     }
@@ -37,9 +37,9 @@ public class RSocketController {
     }
 
     @MessageMapping("getAllBankAccountInfoList")
-    Flux<BankAccountInfo> getAllBankAccountInfoList() {
+    Flux<BankAccountInfoEntity> getAllBankAccountInfoList() {
         log.info("Request for all BankAccountInfos received");
-        Flux<BankAccountInfo> bankAccountInfoFlux = bankAccountInfoService.getAllBankAccountInfo();
+        Flux<BankAccountInfoEntity> bankAccountInfoFlux = bankAccountInfoService.getAllBankAccountInfo();
         log.info("Following message was sent to client: {}", bankAccountInfoFlux);
         return bankAccountInfoFlux;
     }

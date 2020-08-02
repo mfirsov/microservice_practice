@@ -3,6 +3,7 @@ package com.mfirsov.kafkaconsumer.configuration;
 import com.mfirsov.common.model.Address;
 import com.mfirsov.common.model.BankAccount;
 import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.kafkaconsumer.entities.BankAccountInfoEntity;
 import com.mfirsov.kafkaconsumer.repository.CustomCassandraRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,14 +32,14 @@ public class KafkaBindingConfiguration {
                         .build())
                 .toStream()
                 .peek((key, value) -> log.debug("Following Object was combined with key: {} and value: {}", key, value))
-                /*.peek((uuid, bankAccountInfo) -> {
-                    BankAccountInfoEntity entity = new BankAccountInfoConverter().from(bankAccountInfo);
+                .peek((uuid, bankAccountInfo) -> {
+                    BankAccountInfoEntity entity = new BankAccountInfoEntity(bankAccountInfo);
                     customCassandraRepository
                             .insert(entity)
                             .doOnSuccess(bai -> log.debug("Following BankAccountInfoEntity was saved in Cassandra:{}", bai))
                             .doOnError(log::error)
                             .subscribe();
-                })*/;
+                });
     }
 
 }

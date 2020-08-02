@@ -1,6 +1,6 @@
 package com.mfirsov.usercassandrarequest.service;
 
-import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.usercassandrarequest.entities.BankAccountInfoEntity;
 import com.mfirsov.usercassandrarequest.repository.CustomCassandraRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -16,7 +16,7 @@ public class BankAccountInfoService {
         this.cassandraRepository = cassandraRepository;
     }
 
-    public Mono<BankAccountInfo> getBankAccountInfoByUuid(UUID uuid) {
+    public Mono<BankAccountInfoEntity> getBankAccountInfoByUuid(UUID uuid) {
         return cassandraRepository.findBankAccountInfoByUuid(uuid);
     }
 }

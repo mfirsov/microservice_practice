@@ -1,6 +1,6 @@
 package com.mfirsov.rsocketserver.service;
 
-import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.rsocketserver.entities.BankAccountInfoEntity;
 import com.mfirsov.rsocketserver.repository.CustomCassandraRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ public class BankAccountInfoService {
 
     private final CustomCassandraRepository customCassandraRepository;
 
-    public Mono<BankAccountInfo> getBankAccountInfoByUUID(UUID uuid) {
+    public Mono<BankAccountInfoEntity> getBankAccountInfoByUUID(UUID uuid) {
         return customCassandraRepository.findById(uuid);
     }
 
-    public Flux<BankAccountInfo> getAllBankAccountInfo() {
+    public Flux<BankAccountInfoEntity> getAllBankAccountInfo() {
         return customCassandraRepository.findAll();
     }
 

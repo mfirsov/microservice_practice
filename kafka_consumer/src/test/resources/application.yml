@@ -11,6 +11,7 @@ spring:
       contact-points: localhost
       local-datacenter: datacenter1
       schema-action: recreate
+      jmx-enabled: false
 #
 #Spring Cloud Kafka Streams binder config
 spring.cloud.stream:

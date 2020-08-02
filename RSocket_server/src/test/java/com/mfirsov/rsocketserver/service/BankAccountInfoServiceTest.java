@@ -1,8 +1,10 @@
 package com.mfirsov.rsocketserver.service;
 
-import com.mfirsov.model.Address;
-import com.mfirsov.model.BankAccount;
-import com.mfirsov.model.BankAccountInfo;
+import com.mfirsov.common.model.Address;
+import com.mfirsov.common.model.BankAccount;
+import com.mfirsov.common.model.BankAccountInfo;
+import com.mfirsov.rsocketserver.entities.BankAccountInfoEntity;
+import com.mfirsov.rsocketserver.repository.CustomCassandraRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,7 +40,7 @@ import static org.mockito.Mockito.when;
 class BankAccountInfoServiceTest {
 
     @MockBean
-    CustomReactiveCassandraRepository customReactiveCassandraRepository;
+    CustomCassandraRepository customCassandraRepository;
 
     @Autowired
     BankAccountInfoService bankAccountInfoService;
@@ -74,7 +77,8 @@ class BankAccountInfoServiceTest {
                         "TestCity",
                         "TestState"
                 ));
-        when(customReactiveCassandraRepository.findById(Mockito.any(UUID.class))).thenReturn(Mono.just(stubBankAccountInfo));
+        BankAccountInfoEntity bankAccountInfoEntity = new BankAccountInfoEntity(stubBankAccountInfo);
+        when(customCassandraRepository.findById(Mockito.any(UUID.class))).thenReturn(Mono.just(bankAccountInfoEntity));
         Mono<BankAccountInfo> result = rSocketRequester
                 .route("getBankAccountInfoByUUID")
                 .data(UUID.randomUUID())
@@ -115,7 +119,8 @@ class BankAccountInfoServiceTest {
                         "TestCity1",
                         "TestState1"
                 )));
-        when(customReactiveCassandraRepository.findAll()).thenReturn(Flux.fromIterable(stubList));
+        List<BankAccountInfoEntity> bankAccountInfoEntities = stubList.stream().map(BankAccountInfoEntity::new).collect(Collectors.toList());
+        when(customCassandraRepository.findAll()).thenReturn(Flux.fromIterable(bankAccountInfoEntities));
         Flux<BankAccountInfo> result = rSocketRequester
                 .route("getAllBankAccountInfoList")
                 .retrieveFlux(BankAccountInfo.class);
@@ -126,7 +131,7 @@ class BankAccountInfoServiceTest {
 
     @Test
     void deleteBankAccountInfoByUUID() {
-        when(customReactiveCassandraRepository.deleteById(Mockito.any(UUID.class))).thenReturn(Mono.empty());
+        when(customCassandraRepository.deleteById(Mockito.any(UUID.class))).thenReturn(Mono.empty());
         Mono<Void> result = rSocketRequester
                 .route("deleteBankAccountInfoByUUID")
                 .send();

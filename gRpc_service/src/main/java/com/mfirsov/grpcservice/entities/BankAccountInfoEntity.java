@@ -1,17 +1,15 @@
-package com.mfirsov.kafkaconsumer.entities;
+package com.mfirsov.grpcservice.entities;
 
-import com.datastax.driver.core.DataType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mfirsov.common.model.BankAccountInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Data
@@ -19,16 +17,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Table("bank_account_info")
-public class BankAccountInfoEntity implements Serializable {
+public class BankAccountInfoEntity {
 
-    @PrimaryKey
+    @Id
     @JsonIgnore
     private UUID uuid;
 
-    @CassandraType(type = DataType.Name.UDT, userTypeName = "bank_account_type")
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "bank_account")
     private BankAccountEntity bankAccountEntity;
 
-    @CassandraType(type = DataType.Name.UDT, userTypeName = "address_type")
+    @CassandraType(type = CassandraType.Name.UDT, userTypeName = "address")
     private AddressEntity addressEntity;
 
     public BankAccountInfoEntity(BankAccountEntity bankAccountEntity, AddressEntity addressEntity) {
@@ -37,8 +35,8 @@ public class BankAccountInfoEntity implements Serializable {
     }
 
     public BankAccountInfoEntity(BankAccountInfo bankAccountInfo) {
-        this.bankAccountEntity = new BankAccountEntity(bankAccountInfo.getBankAccount());
         this.addressEntity = new AddressEntity(bankAccountInfo.getAddress());
+        this.bankAccountEntity = new BankAccountEntity(bankAccountInfo.getBankAccount());
         this.uuid = bankAccountInfo.getUuid();
     }
 }

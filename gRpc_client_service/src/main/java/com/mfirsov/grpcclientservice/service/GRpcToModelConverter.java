@@ -13,8 +13,8 @@ public class GRpcToModelConverter {
 
     public static BankAccountInfosResponse convert(BankAccountInfoProto.BankAccountInfoResponse bankAccountInfoResponse) {
         return new BankAccountInfosResponse(bankAccountInfoResponse.getBankAccountInfoList().stream().map(bankAccountInfo -> {
-            BankAccount bankAccount = convertBankAccount(bankAccountInfo.getBankAccount());
-            return new BankAccountInfo(bankAccount.getUuid(), bankAccount, convertAddress(bankAccountInfo.getAddress()));
+            BankAccount bankAccount = convertBankAccount(bankAccountInfo.getBankAccountEntity());
+            return new BankAccountInfo(bankAccount.getUuid(), bankAccount, convertAddress(bankAccountInfo.getAddressEntity()));
         }).collect(Collectors.toList()));
     }
 

@@ -1,8 +1,6 @@
 package com.mfirsov.kafkaconsumer.configuration;
 
 import com.mfirsov.kafkaconsumer.entities.BankAccountInfoEntity;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.config.SchemaAction;
@@ -13,25 +11,22 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableReactiveCassandraRepositories
 public class CassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
-    private final CassandraProperties cassandraProperties;
-
     @Override
     protected String getKeyspaceName() {
-        return cassandraProperties.getKeyspaceName();
+        return "bank";
     }
 
     @Override
     public SchemaAction getSchemaAction() {
-        return SchemaAction.valueOf(cassandraProperties.getSchemaAction().toUpperCase());
+        return SchemaAction.RECREATE;
     }
 
     @Override
     protected String getContactPoints() {
-        return cassandraProperties.getContactPoints().get(0);
+        return "localhost";
     }
 
     @Override
@@ -41,12 +36,7 @@ public class CassandraConfiguration extends AbstractReactiveCassandraConfigurati
 
     @Override
     protected int getPort() {
-        return cassandraProperties.getPort();
-    }
-
-    @Override
-    protected String getLocalDataCenter() {
-        return cassandraProperties.getLocalDatacenter();
+        return 9042;
     }
 
     @Override
@@ -54,4 +44,8 @@ public class CassandraConfiguration extends AbstractReactiveCassandraConfigurati
         return Collections.singletonList(CreateKeyspaceSpecification.createKeyspace(getKeyspaceName()).ifNotExists());
     }
 
+    @Override
+    protected boolean getMetricsEnabled() {
+        return false;
+    }
 }

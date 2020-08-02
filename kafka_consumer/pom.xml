@@ -11,35 +11,13 @@
 
     <artifactId>kafka_consumer</artifactId>
 
-    <properties>
-        <groovy.version>3.0.5</groovy.version>
-    </properties>
-
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-cassandra</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-cassandra</artifactId>
+            <version>2.2.6.RELEASE</version>
             <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-sql</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.groovy</groupId>
-                    <artifactId>groovy-json</artifactId>
-                </exclusion>
-<!--                <exclusion>-->
-<!--                    <groupId>com.datastax.oss</groupId>-->
-<!--                    <artifactId>java-driver-core</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>com.datastax.oss</groupId>-->
-<!--                    <artifactId>java-driver-query-builder</artifactId>-->
-<!--                </exclusion>-->
+
             </exclusions>
         </dependency>
         <dependency>
@@ -64,32 +42,6 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>${groovy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-sql</artifactId>
-            <version>${groovy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-json</artifactId>
-            <version>${groovy.version}</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.datastax.oss</groupId>-->
-<!--            <artifactId>java-driver-core</artifactId>-->
-<!--            <version>4.8.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.datastax.oss</groupId>-->
-<!--            <artifactId>java-driver-query-builder</artifactId>-->
-<!--            <version>4.8.0</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 
     <repositories>
